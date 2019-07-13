@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// executes the function and displays its execution time
+// Timed executes the function and displays its execution time
 func Timed(f func(...interface{}), args ...interface{}) {
 	start := time.Now()
 	f(args...)

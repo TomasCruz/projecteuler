@@ -1,6 +1,8 @@
 package main
 
-import "github.com/TomasCruz/projecteuler"
+import (
+	"github.com/TomasCruz/projecteuler"
+)
 
 /*
 */
@@ -10,4 +12,11 @@ func main() {
 }
 
 func calc(args ...interface{}) {
+	var limit int64
+
+	if len(args) == 0 {
+		limit = 0
+	} else {
+		limit = args[0].(int64)
+	}
 }

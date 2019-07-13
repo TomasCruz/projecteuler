@@ -25,12 +25,12 @@ func main() {
 }
 
 func calc(args ...interface{}) {
-	var valueLimit int64
+	var limit int64
 
 	if len(args) == 0 {
-		valueLimit = 4000000
+		limit = 4000000
 	} else {
-		valueLimit = args[0].(int64)
+		limit = args[0].(int64)
 	}
 
 	var sum, currFib int64
@@ -42,7 +42,7 @@ func calc(args ...interface{}) {
 	for {
 		currMatrix.Mul(&prevMatrix, stepThreeMatrix)
 		currFib = int64(currMatrix.At(0, 1))
-		if currFib > valueLimit {
+		if currFib > limit {
 			break
 		}
 
