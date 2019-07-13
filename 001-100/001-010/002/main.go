@@ -34,21 +34,21 @@ func calc(args ...interface{}) {
 	}
 
 	var sum, currFib int64
-	var currMatrix mat.Dense
 
-	prevMatrix := *mat.NewDense(2, 2, []float64{1, 0, 0, 1})
+	prevMatrix := mat.NewDense(2, 2, []float64{1, 0, 0, 1})
+	currMatrix := mat.NewDense(2, 2, []float64{1, 0, 0, 1})
 	stepThreeMatrix := mat.NewDense(2, 2, []float64{3, 2, 2, 1})
 
 	for {
-		currMatrix.Mul(&prevMatrix, stepThreeMatrix)
+		currMatrix.Mul(prevMatrix, stepThreeMatrix)
 		currFib = int64(currMatrix.At(0, 1))
 		if currFib > limit {
 			break
 		}
 
 		sum += currFib
-		prevMatrix.Copy(&currMatrix)
-		//fmt.Printf("c = %v\n", mat.Formatted(&currMatrix, mat.Prefix("    "), mat.Squeeze()))
+		prevMatrix.Copy(currMatrix)
+		//fmt.Printf("c = %v\n", mat.Formatted(currMatrix, mat.Prefix("    "), mat.Squeeze()))
 	}
 
 	fmt.Println(sum)
