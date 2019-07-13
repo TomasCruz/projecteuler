@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/TomasCruz/projecteuler"
+)
 
 /*
 Multiples of 3 and 5
@@ -12,7 +16,18 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 */
 
 func main() {
-	limit := 1000
+	//projecteuler.Timed(calc)
+	projecteuler.Timed(calc, 1000)
+}
+
+func calc(args ...interface{}) {
+	var limit int
+
+	if len(args) == 0 {
+		limit = 1000
+	} else {
+		limit = args[0].(int)
+	}
 
 	uLimit3 := biggestSmallerDivisibleBy(limit, 3)
 	uLimit5 := biggestSmallerDivisibleBy(limit, 5)
