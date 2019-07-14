@@ -1,6 +1,10 @@
 package main
 
 import (
+	"log"
+	"os"
+	"strconv"
+
 	"github.com/TomasCruz/projecteuler"
 )
 
@@ -8,15 +12,26 @@ import (
 */
 
 func main() {
-	projecteuler.Timed(calc)
+	var args []interface{}
+	var limit int
+
+	if len(os.Args) > 1 {
+		limit64, err := strconv.ParseInt(os.Args[1], 10, 64)
+		if err != nil {
+			log.Fatal("bad argument")
+		}
+
+		limit = int(limit64)
+	} else {
+		limit = 0 // problem specific value
+	}
+
+	args = append(args, limit)
+	projecteuler.Timed(calc, args...)
 }
 
-func calc(args ...interface{}) {
-	var limit int64
+func calc(args ...interface{}) (err error) {
+	limit := args[0].(int)
 
-	if len(args) == 0 {
-		limit = 0
-	} else {
-		limit = args[0].(int64)
-	}
+	return
 }

@@ -33,7 +33,7 @@ func main() {
 	projecteuler.Timed(calc, args...)
 }
 
-func calc(args ...interface{}) {
+func calc(args ...interface{}) (err error) {
 	var limit int64
 
 	if len(args) == 0 {
@@ -51,9 +51,10 @@ func calc(args ...interface{}) {
 	}
 
 	fmt.Println(largest)
+	return
 }
 
-func isDivisibleToOne(args ...interface{}) bool {
+func isDivisibleToOne(args ...interface{}) (bool, error) {
 	inspected := args[0].(*int)
 	largest := args[1].(*int)
 	divider := args[2].(int)
@@ -63,5 +64,5 @@ func isDivisibleToOne(args ...interface{}) bool {
 		*inspected /= divider
 	}
 
-	return *inspected == 1
+	return *inspected == 1, nil
 }

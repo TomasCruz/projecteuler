@@ -21,7 +21,7 @@ func main() {
 	projecteuler.Timed(calc)
 }
 
-func calc(args ...interface{}) {
+func calc(args ...interface{}) (err error) {
 	var found int
 	var doBreak bool
 
@@ -41,6 +41,7 @@ func calc(args ...interface{}) {
 	}
 
 	fmt.Println(found)
+	return
 }
 
 func isThreeDigits(num int) bool {

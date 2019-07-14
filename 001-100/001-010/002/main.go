@@ -24,7 +24,7 @@ func main() {
 	projecteuler.Timed(calc, int64(4000000))
 }
 
-func calc(args ...interface{}) {
+func calc(args ...interface{}) (err error) {
 	var limit int64
 
 	if len(args) == 0 {
@@ -52,4 +52,5 @@ func calc(args ...interface{}) {
 	}
 
 	fmt.Println(sum)
+	return
 }

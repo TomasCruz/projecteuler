@@ -20,7 +20,7 @@ func main() {
 	projecteuler.Timed(calc, 1000)
 }
 
-func calc(args ...interface{}) {
+func calc(args ...interface{}) (err error) {
 	var limit int
 
 	if len(args) == 0 {
@@ -35,6 +35,8 @@ func calc(args ...interface{}) {
 
 	result := 3*littleGausSum(uLimit3/3) + 5*littleGausSum(uLimit5/5) - 15*littleGausSum(uLimit15/15)
 	fmt.Println(result)
+
+	return
 }
 
 func littleGausSum(limit int) int {
