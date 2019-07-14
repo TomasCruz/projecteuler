@@ -6,7 +6,7 @@ import (
 )
 
 // Primes calculates and returns slice of primes smaller than limit
-func Primes(limit int, f func(...interface{}) (bool, error), args ...interface{}) (primes []int) {
+func Primes(limit int, f func(...interface{}) bool, args ...interface{}) (primes []int) {
 	primes = append(primes, 2)
 	primes = append(primes, 3)
 
@@ -24,8 +24,7 @@ func Primes(limit int, f func(...interface{}) (bool, error), args ...interface{}
 			primes = append(primes, num)
 			if f != nil {
 				args = append(args, num)
-				doBreak, err := f(args...)
-				if doBreak || err != nil {
+				if f(args...) {
 					break
 				}
 				args = args[:len(args)-1]

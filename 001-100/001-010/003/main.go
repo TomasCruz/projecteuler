@@ -54,7 +54,7 @@ func calc(args ...interface{}) (err error) {
 	return
 }
 
-func isDivisibleToOne(args ...interface{}) (bool, error) {
+func isDivisibleToOne(args ...interface{}) bool {
 	inspected := args[0].(*int)
 	largest := args[1].(*int)
 	divider := args[2].(int)
@@ -64,5 +64,5 @@ func isDivisibleToOne(args ...interface{}) (bool, error) {
 		*inspected /= divider
 	}
 
-	return *inspected == 1, nil
+	return *inspected == 1
 }
