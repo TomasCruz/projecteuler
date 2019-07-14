@@ -23,23 +23,18 @@ func main() {
 
 func calc(args ...interface{}) (err error) {
 	var found int
-	var doBreak bool
 
 	palindromes := findPalindromes()
 	for i := 0; i < len(palindromes); i++ {
 		for j := 100; j < 1000; j++ {
 			if palindromes[i]%j == 0 && isThreeDigits(palindromes[i]/j) {
 				found = palindromes[i]
-				doBreak = true
-				break
+				goto finish
 			}
-		}
-
-		if doBreak {
-			break
 		}
 	}
 
+finish:
 	fmt.Println(found)
 	return
 }
