@@ -12,7 +12,6 @@ import (
 */
 
 func main() {
-	var args []interface{}
 	var limit int
 
 	if len(os.Args) > 1 {
@@ -26,8 +25,7 @@ func main() {
 		limit = 0 // problem specific value
 	}
 
-	args = append(args, limit)
-	projecteuler.Timed(calc, args...)
+	projecteuler.Timed(calc, limit)
 }
 
 func calc(args ...interface{}) (err error) {
