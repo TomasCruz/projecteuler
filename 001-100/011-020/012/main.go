@@ -85,7 +85,7 @@ func calc(args ...interface{}) (err error) {
 }
 
 func numDivisors(num int, primes []int) int {
-	var factors []projecteuler.Powered
+	var factors map[int]int
 	var err error
 
 	if factors, err = projecteuler.Factorize(num, primes); err != nil {
@@ -94,8 +94,8 @@ func numDivisors(num int, primes []int) int {
 	}
 
 	result := 1
-	for _, pow := range factors {
-		result *= pow.Exp + 1
+	for _, v := range factors {
+		result *= v + 1
 	}
 
 	return result

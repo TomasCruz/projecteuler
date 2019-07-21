@@ -39,41 +39,29 @@ func main() {
 func calc(args ...interface{}) (err error) {
 	limit := args[0].(int)
 
-	primeFactors := make(map[int]*projecteuler.Powered)
+	primeFactors := make(map[int]int)
 	primes := projecteuler.Primes(limit+1, nil)
 
 	for i := 2; i <= limit; i++ {
-		var factors []projecteuler.Powered
+		var factors map[int]int
 		if factors, err = projecteuler.Factorize(i, primes); err != nil {
 			fmt.Println(err)
 			return
 		}
 
-		for _, currFactor := range factors {
-			if powered, ok := primeFactors[currFactor.Base]; ok {
-				if currFactor.Exp > powered.Exp {
-					powered.Exp = currFactor.Exp
+		for k, v := range factors {
+			if powered, ok := primeFactors[k]; ok {
+				if v > powered {
+					primeFactors[k] = v
 				}
 			} else {
-				primeFactors[currFactor.Base] = &currFactor
+				primeFactors[k] = v
 			}
 		}
 	}
 
-	result := multiplyPrimeFactors(primeFactors)
+	result := projecteuler.MultiplyFactors(primeFactors)
 	fmt.Println(result)
 
 	return
-}
-
-func multiplyPrimeFactors(primeFactors map[int]*projecteuler.Powered) int64 {
-	result := int64(1)
-
-	for _, v := range primeFactors {
-		for j := 0; j < v.Exp; j++ {
-			result *= int64(v.Base)
-		}
-	}
-
-	return result
 }
