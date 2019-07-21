@@ -20,7 +20,7 @@ func MakeBigInt(input string) (result BigInt, err error) {
 }
 
 // CloneBigInt clones BigInt
-func CloneBigInt(rhs *BigInt) (result BigInt) {
+func CloneBigInt(rhs BigInt) (result BigInt) {
 	result.digits = make([]byte, len(rhs.digits))
 	copy(result.digits, rhs.digits)
 	return
@@ -63,14 +63,14 @@ func Add(one BigInt, two BigInt) (result BigInt) {
 }
 
 // AddTo adds to
-func (bi *BigInt) AddTo(rhs *BigInt) {
-	result := Add(*bi, *rhs)
+func (bi *BigInt) AddTo(rhs BigInt) {
+	result := Add(*bi, rhs)
 	bi.digits = make([]byte, len(result.digits))
 	copy(bi.digits, result.digits)
 }
 
 // String returns string representation
-func (bi *BigInt) String() string {
+func (bi BigInt) String() string {
 	var sb strings.Builder
 
 	for i := len(bi.digits); i > 0; i-- {

@@ -142,14 +142,12 @@ func calc(args ...interface{}) (err error) {
 		return
 	}
 
-	numbers := make([]*projecteuler.BigInt, 100)
+	numbers := make([]projecteuler.BigInt, 100)
 	for i, line := range textNumbers {
-		var currBigInt projecteuler.BigInt
-		if currBigInt, err = projecteuler.MakeBigInt(line); err != nil {
+		if numbers[i], err = projecteuler.MakeBigInt(line); err != nil {
 			fmt.Println(err)
 			return
 		}
-		numbers[i] = &currBigInt
 	}
 
 	var zero projecteuler.BigInt
