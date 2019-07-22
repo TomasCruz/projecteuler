@@ -7,6 +7,18 @@ type BigInt struct {
 	digits []byte
 }
 
+// MakeBigIntFromInt constructs BigInt out of int
+func MakeBigIntFromInt(input int) (result BigInt, err error) {
+	result.digits = make([]byte, 0)
+
+	for i := 0; input > 0; i++ {
+		result.digits = append(result.digits, byte(input%10))
+		input /= 10
+	}
+
+	return
+}
+
 // MakeBigInt constructs BigInt out of string
 func MakeBigInt(input string) (result BigInt, err error) {
 	l := len(input)
