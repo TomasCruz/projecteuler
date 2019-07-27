@@ -4,7 +4,7 @@ import (
 	"math"
 )
 
-// Primes calculates and returns slice of primes smaller than limit
+// Primes calculates and returns slice of primes smaller than limit, or until f returns true
 func Primes(limit int, f func(...interface{}) bool, args ...interface{}) (primes []int) {
 	primes = append(primes, 2)
 	primes = append(primes, 3)
