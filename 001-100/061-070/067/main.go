@@ -45,10 +45,10 @@ func main() {
 		limit = 100
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	var textNumbers []string
@@ -62,10 +62,10 @@ func calc(args ...interface{}) (err error) {
 		return
 	}
 
-	result := buildAddedMatrix(limit, m)
-
+	res := buildAddedMatrix(limit, m)
 	//projecteuler.PrintMatrix(result)
-	fmt.Println(result[0][0])
+
+	result = strconv.Itoa(res[0][0])
 	return
 }
 

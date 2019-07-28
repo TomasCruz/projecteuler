@@ -1,7 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
+	"strconv"
 
 	"github.com/TomasCruz/projecteuler"
 	"gonum.org/v1/gonum/mat"
@@ -21,20 +23,24 @@ find the sum of the even-valued terms.
 */
 
 func main() {
-	projecteuler.Timed(calc, int64(4000000))
-}
-
-func calc(args ...interface{}) (err error) {
 	var limit int64
+	var err error
 
-	if len(args) == 0 {
-		limit = 4000000
+	if len(os.Args) > 1 {
+		if limit, err = strconv.ParseInt(os.Args[1], 10, 64); err != nil {
+			log.Fatal("bad argument")
+		}
 	} else {
-		limit = args[0].(int64)
+		limit = 4000000
 	}
 
-	var sum, currFib int64
+	projecteuler.TimedStr(calc, limit)
+}
 
+func calc(args ...interface{}) (result string, err error) {
+	limit := args[0].(int64)
+
+	var sum, currFib int64
 	prevMatrix := mat.NewDense(2, 2, []float64{1, 0, 0, 1})
 	currMatrix := mat.NewDense(2, 2, []float64{1, 0, 0, 1})
 	stepThreeMatrix := mat.NewDense(2, 2, []float64{3, 2, 2, 1})
@@ -51,6 +57,6 @@ func calc(args ...interface{}) (err error) {
 		//fmt.Printf("c = %v\n", mat.Formatted(currMatrix, mat.Prefix("    "), mat.Squeeze()))
 	}
 
-	fmt.Println(sum)
+	result = strconv.FormatInt(sum, 10)
 	return
 }

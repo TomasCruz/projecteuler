@@ -25,10 +25,10 @@ func main() {
 		limit = 0 // problem specific value
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	return

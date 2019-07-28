@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -33,21 +32,21 @@ func main() {
 		limit = 20
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	primes := projecteuler.Primes(2*limit+1, nil)
 
-	var result map[int]int
-	if result, err = projecteuler.Binomial(2*limit, limit, primes); err != nil {
+	var binomial map[int]int
+	if binomial, err = projecteuler.Binomial(2*limit, limit, primes); err != nil {
 		return
 	}
 
-	result64 := projecteuler.MultiplyFactors(result)
-	fmt.Println(result64)
+	resultInt64 := projecteuler.MultiplyFactors(binomial)
 
+	result = strconv.FormatInt(resultInt64, 10)
 	return
 }

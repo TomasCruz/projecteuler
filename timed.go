@@ -5,6 +5,18 @@ import (
 	"time"
 )
 
+func printCalc(f func(...interface{}) (string, error), args ...interface{}) (err error) {
+	var result string
+
+	if result, err = f(args...); err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println(result)
+	}
+
+	return
+}
+
 // Timed executes the function and displays its execution time
 func Timed(f func(...interface{}) error, args ...interface{}) {
 	start := time.Now()
@@ -13,11 +25,10 @@ func Timed(f func(...interface{}) error, args ...interface{}) {
 	}
 }
 
-// TimedStr executes the function and displays string result and execution time
+// TimedStr executes the function and displays its execution time
 func TimedStr(f func(...interface{}) (string, error), args ...interface{}) {
 	start := time.Now()
-	if result, err := f(args...); err == nil {
-		fmt.Println(result)
+	if err := printCalc(f, args...); err == nil {
 		fmt.Println("Execution lasted: ", time.Since(start))
 	}
 }
