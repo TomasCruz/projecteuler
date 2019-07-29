@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -41,23 +40,23 @@ func main() {
 		limit = 1000000
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
-	result := 0
+	resultInt := 0
 	resultLength := 0
 	for i := 2; i < limit; i++ {
 		curr := collatzLength(i)
 		if curr > resultLength {
-			result = i
+			resultInt = i
 			resultLength = curr
 		}
 	}
 
-	fmt.Println(result)
+	result = strconv.Itoa(resultInt)
 	return
 }
 

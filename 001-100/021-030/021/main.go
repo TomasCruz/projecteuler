@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -35,10 +34,10 @@ func main() {
 		limit = 10000
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	primes := projecteuler.Primes(limit, nil)
@@ -61,7 +60,7 @@ func calc(args ...interface{}) (err error) {
 		}
 	}
 
-	fmt.Println(amicableSum)
+	result = strconv.Itoa(amicableSum)
 	return
 }
 

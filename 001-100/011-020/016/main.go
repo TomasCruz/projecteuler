@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"strconv"
 
 	"github.com/TomasCruz/projecteuler"
 )
@@ -15,10 +15,10 @@ What is the sum of the digits of the number 2^1000?
 */
 
 func main() {
-	projecteuler.Timed(calc)
+	projecteuler.TimedStr(calc)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	var bi projecteuler.BigInt
 	if bi, err = projecteuler.MakeBigInt("1024"); err != nil {
 		return
@@ -28,7 +28,7 @@ func calc(args ...interface{}) (err error) {
 	biPtr.PowBigInt(10)
 	biPtr.PowBigInt(10)
 	sum := bi.DigitSum()
-	fmt.Println(sum)
 
+	result = strconv.Itoa(sum)
 	return
 }

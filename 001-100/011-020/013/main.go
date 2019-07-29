@@ -130,10 +130,10 @@ func main() {
 		limit = 10
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	var textNumbers []string
@@ -162,8 +162,6 @@ func calc(args ...interface{}) (err error) {
 		sum.AddTo(x)
 	}
 
-	result := sum.String()
-	fmt.Println(result[:limit])
-
+	result = sum.String()[:limit]
 	return
 }

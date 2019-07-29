@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -18,7 +17,6 @@ Find the sum of all the primes below two million.
 */
 
 func main() {
-	var args []interface{}
 	var limit int
 
 	if len(os.Args) > 1 {
@@ -32,19 +30,18 @@ func main() {
 		limit = 2000000
 	}
 
-	args = append(args, limit)
-	projecteuler.Timed(calc, args...)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 	primes := projecteuler.Primes(limit, nil)
 
-	var result int64
+	var resultInt64 int64
 	for _, x := range primes {
-		result += int64(x)
+		resultInt64 += int64(x)
 	}
 
-	fmt.Println(result)
+	result = strconv.FormatInt(resultInt64, 10)
 	return
 }

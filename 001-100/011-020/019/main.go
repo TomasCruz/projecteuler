@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -40,7 +39,7 @@ func main() {
 		limit = 100
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
 const (
@@ -53,21 +52,21 @@ const (
 	saturday
 )
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	mMap := buildMonthMap()
 
-	var result, start int
+	var resultInt, start int
 	_, start = sundaysFirstInYear(monday, mMap)
 
 	for i := 0; i < limit; i++ {
 		var currResult int
 		currResult, start = sundaysFirstInYear(start, mMap)
-		result += currResult
+		resultInt += currResult
 	}
 
-	fmt.Println(result)
+	result = strconv.Itoa(resultInt)
 	return
 }
 

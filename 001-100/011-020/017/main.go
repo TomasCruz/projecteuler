@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"strconv"
 
 	"github.com/TomasCruz/projecteuler"
 )
@@ -20,10 +20,10 @@ compliance with British usage.
 */
 
 func main() {
-	projecteuler.Timed(calc)
+	projecteuler.TimedStr(calc)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	numMap := buildMap()
 
 	// 1-99
@@ -38,7 +38,7 @@ func calc(args ...interface{}) (err error) {
 	// 1000
 	sum += numMap[1] + numMap[1000]
 
-	fmt.Println(sum)
+	result = strconv.Itoa(sum)
 	return
 }
 

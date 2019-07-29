@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"sort"
+	"strconv"
 
 	"github.com/TomasCruz/projecteuler"
 )
@@ -18,24 +18,25 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 */
 
 func main() {
-	projecteuler.Timed(calc)
+	projecteuler.TimedStr(calc)
 }
 
-func calc(args ...interface{}) (err error) {
-	var found int
-
+func calc(args ...interface{}) (result string, err error) {
+	found := 0
 	palindromes := findPalindromes()
-	for i := 0; i < len(palindromes); i++ {
+
+	var doBreak bool
+	for i := 0; !doBreak && i < len(palindromes); i++ {
 		for j := 100; j < 1000; j++ {
 			if palindromes[i]%j == 0 && isThreeDigits(palindromes[i]/j) {
 				found = palindromes[i]
-				goto finish
+				doBreak = true
+				break
 			}
 		}
 	}
 
-finish:
-	fmt.Println(found)
+	result = strconv.Itoa(found)
 	return
 }
 

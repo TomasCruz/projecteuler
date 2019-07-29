@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -40,10 +39,10 @@ func main() {
 		limit = 28124
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	// for limit == 25, sum = 1..23 = 23*12 = 230+46 = 276
@@ -80,7 +79,7 @@ func calc(args ...interface{}) (err error) {
 		totalSum += n
 	}
 
-	fmt.Println(totalSum)
+	result = strconv.Itoa(totalSum)
 	return
 }
 

@@ -46,10 +46,10 @@ func main() {
 		limit = 500
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	primes := projecteuler.Primes(100000, nil)
@@ -65,7 +65,7 @@ func calc(args ...interface{}) (err error) {
 
 		totalDivisors := prevOddDivisors * evenDivisors
 		if totalDivisors > limit {
-			fmt.Println((i - 1) * i / 2)
+			result = strconv.Itoa((i - 1) * i / 2)
 			break
 		}
 
@@ -73,7 +73,7 @@ func calc(args ...interface{}) (err error) {
 		nextOddDivisors := numDivisors(i+1, primes)
 		totalDivisors = evenDivisors * nextOddDivisors
 		if totalDivisors > limit {
-			fmt.Println(i * (i + 1) / 2)
+			result = strconv.Itoa(i * (i + 1) / 2)
 			break
 		}
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math/big"
 	"os"
@@ -35,24 +34,24 @@ func main() {
 		limit = 100
 	}
 
-	projecteuler.Timed(calc, limit)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
-	result := big.NewInt(int64(2))
+	resultBig := big.NewInt(int64(2))
 	for i := 3; i <= limit; i++ {
-		result.Mul(result, big.NewInt(int64(i)))
+		resultBig.Mul(resultBig, big.NewInt(int64(i)))
 	}
 
 	digitSum := 0
-	str := result.Text(10)
+	str := resultBig.Text(10)
 
 	for i := 0; i < len(str); i++ {
 		digitSum += int(str[i] - '0')
 	}
 
-	fmt.Println(digitSum)
+	result = strconv.Itoa(digitSum)
 	return
 }

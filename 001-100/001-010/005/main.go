@@ -18,7 +18,6 @@ What is the smallest positive number that is evenly divisible by all of the numb
 */
 
 func main() {
-	var args []interface{}
 	var limit int
 
 	if len(os.Args) > 1 {
@@ -32,11 +31,10 @@ func main() {
 		limit = 20
 	}
 
-	args = append(args, limit)
-	projecteuler.Timed(calc, args...)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	primeFactors := make(map[int]int)
@@ -60,8 +58,8 @@ func calc(args ...interface{}) (err error) {
 		}
 	}
 
-	result := projecteuler.MultiplyFactors(primeFactors)
-	fmt.Println(result)
+	resultInt64 := projecteuler.MultiplyFactors(primeFactors)
+	result = strconv.FormatInt(resultInt64, 10)
 
 	return
 }

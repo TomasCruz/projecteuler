@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -19,28 +18,23 @@ What is the largest prime factor of the number 600851475143 ?
 */
 
 func main() {
-	var args []interface{}
+	var limit int64
 
 	if len(os.Args) > 1 {
-		limit, err := strconv.ParseInt(os.Args[1], 10, 64)
+		var err error
+		limit, err = strconv.ParseInt(os.Args[1], 10, 64)
 		if err != nil {
 			log.Fatal("bad argument")
 		}
-
-		args = append(args, limit)
+	} else {
+		limit = 600851475143
 	}
 
-	projecteuler.Timed(calc, args...)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
-	var limit int64
-
-	if len(args) == 0 {
-		limit = 600851475143
-	} else {
-		limit = args[0].(int64)
-	}
+func calc(args ...interface{}) (result string, err error) {
+	limit := args[0].(int64)
 
 	var largest int
 	inspected := int(limit)
@@ -50,7 +44,7 @@ func calc(args ...interface{}) (err error) {
 		largest = int(limit)
 	}
 
-	fmt.Println(largest)
+	result = strconv.Itoa(largest)
 	return
 }
 

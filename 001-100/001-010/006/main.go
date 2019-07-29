@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -25,7 +24,6 @@ Find the difference between the sum of the squares of the first one hundred natu
 */
 
 func main() {
-	var args []interface{}
 	var limit int
 
 	if len(os.Args) > 1 {
@@ -39,16 +37,14 @@ func main() {
 		limit = 100
 	}
 
-	args = append(args, limit)
-	projecteuler.Timed(calc, args...)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
+	resultInt := littleGausSum(limit)*littleGausSum(limit) - squarePyramidalNumber(limit)
+	result = strconv.Itoa(resultInt)
 
-	result := littleGausSum(limit)*littleGausSum(limit) - squarePyramidalNumber(limit)
-
-	fmt.Println(result)
 	return
 }
 

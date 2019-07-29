@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -22,7 +21,6 @@ Find the product abc.
 */
 
 func main() {
-	var args []interface{}
 	var limit int
 
 	if len(os.Args) > 1 {
@@ -36,11 +34,12 @@ func main() {
 		limit = 1000
 	}
 
-	args = append(args, limit)
-	projecteuler.Timed(calc, args...)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
+	limit := args[0].(int)
+
 	/*
 		a < b < c
 		a + b + c == 1000 (1)
@@ -59,18 +58,16 @@ func calc(args ...interface{}) (err error) {
 		if (5*10^5 - 1000*a) % (1000-a) == 0, solution found
 	*/
 
-	limit := args[0].(int)
-
-	result := 0
+	resultInt := 0
 	for a := 1; a < limit/3; a++ {
 		if (limit*limit/2-limit*a)%(limit-a) == 0 {
 			b := (limit*limit/2 - limit*a) / (limit - a)
 			c := limit - a - b
-			result = a * b * c
+			resultInt = a * b * c
 			break
 		}
 	}
 
-	fmt.Println(result)
+	result = strconv.Itoa(resultInt)
 	return
 }

@@ -1,7 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
+	"strconv"
 
 	"github.com/TomasCruz/projecteuler"
 )
@@ -16,26 +18,32 @@ Find the sum of all the multiples of 3 or 5 below 1000.
 */
 
 func main() {
-	//projecteuler.Timed(calc)
-	projecteuler.Timed(calc, 1000)
-}
-
-func calc(args ...interface{}) (err error) {
 	var limit int
 
-	if len(args) == 0 {
-		limit = 1000
+	if len(os.Args) > 1 {
+		limit64, err := strconv.ParseInt(os.Args[1], 10, 64)
+		if err != nil {
+			log.Fatal("bad argument")
+		}
+
+		limit = int(limit64)
 	} else {
-		limit = args[0].(int)
+		limit = 1000
 	}
+
+	projecteuler.TimedStr(calc, limit)
+}
+
+func calc(args ...interface{}) (result string, err error) {
+	limit := args[0].(int)
 
 	uLimit3 := biggestSmallerDivisibleBy(limit, 3)
 	uLimit5 := biggestSmallerDivisibleBy(limit, 5)
 	uLimit15 := biggestSmallerDivisibleBy(limit, 15)
 
-	result := 3*littleGausSum(uLimit3/3) + 5*littleGausSum(uLimit5/5) - 15*littleGausSum(uLimit15/15)
-	fmt.Println(result)
+	resultInt := 3*littleGausSum(uLimit3/3) + 5*littleGausSum(uLimit5/5) - 15*littleGausSum(uLimit15/15)
 
+	result = strconv.Itoa(resultInt)
 	return
 }
 

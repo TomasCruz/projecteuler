@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"os"
@@ -19,7 +18,6 @@ What is the 10 001st prime number?
 */
 
 func main() {
-	var args []interface{}
 	var limit int
 
 	if len(os.Args) > 1 {
@@ -33,16 +31,15 @@ func main() {
 		limit = 10001
 	}
 
-	args = append(args, limit)
-	projecteuler.Timed(calc, args...)
+	projecteuler.TimedStr(calc, limit)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	projecteuler.Primes(math.MaxInt64, isAskedIndex, limit)
-	fmt.Println(x)
 
+	result = strconv.Itoa(x)
 	return
 }
 

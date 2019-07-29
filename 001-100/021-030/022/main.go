@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/TomasCruz/projecteuler"
@@ -28,10 +29,10 @@ func (a nameType) Less(i, j int) bool { return a[i] < a[j] }
 func (a nameType) Swap(i, j int)      { t := a[i]; a[i] = a[j]; a[j] = t }
 
 func main() {
-	projecteuler.Timed(calc)
+	projecteuler.TimedStr(calc)
 }
 
-func calc(args ...interface{}) (err error) {
+func calc(args ...interface{}) (result string, err error) {
 	var textNumbers []string
 	if textNumbers, err = projecteuler.FileToStrings("p022_names.txt"); err != nil {
 		fmt.Println(err)
@@ -49,7 +50,7 @@ func calc(args ...interface{}) (err error) {
 		totalSum += (i + 1) * alphaSum(names[i])
 	}
 
-	fmt.Println(totalSum)
+	result = strconv.Itoa(totalSum)
 	return
 }
 
