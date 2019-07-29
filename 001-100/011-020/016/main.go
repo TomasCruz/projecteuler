@@ -15,7 +15,7 @@ What is the sum of the digits of the number 2^1000?
 */
 
 func main() {
-	projecteuler.TimedStr(calc)
+	projecteuler.Timed(calc)
 }
 
 func calc(args ...interface{}) (result string, err error) {

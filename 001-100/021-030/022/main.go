@@ -29,7 +29,7 @@ func (a nameType) Less(i, j int) bool { return a[i] < a[j] }
 func (a nameType) Swap(i, j int)      { t := a[i]; a[i] = a[j]; a[j] = t }
 
 func main() {
-	projecteuler.TimedStr(calc)
+	projecteuler.Timed(calc)
 }
 
 func calc(args ...interface{}) (result string, err error) {

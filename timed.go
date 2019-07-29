@@ -18,15 +18,7 @@ func printCalc(f func(...interface{}) (string, error), args ...interface{}) (err
 }
 
 // Timed executes the function and displays its execution time
-func Timed(f func(...interface{}) error, args ...interface{}) {
-	start := time.Now()
-	if err := f(args...); err == nil {
-		fmt.Println("Execution lasted: ", time.Since(start))
-	}
-}
-
-// TimedStr executes the function and displays its execution time
-func TimedStr(f func(...interface{}) (string, error), args ...interface{}) {
+func Timed(f func(...interface{}) (string, error), args ...interface{}) {
 	start := time.Now()
 	if err := printCalc(f, args...); err == nil {
 		fmt.Println("Execution lasted: ", time.Since(start))

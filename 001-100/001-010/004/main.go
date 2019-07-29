@@ -18,7 +18,7 @@ Find the largest palindrome made from the product of two 3-digit numbers.
 */
 
 func main() {
-	projecteuler.TimedStr(calc)
+	projecteuler.Timed(calc)
 }
 
 func calc(args ...interface{}) (result string, err error) {

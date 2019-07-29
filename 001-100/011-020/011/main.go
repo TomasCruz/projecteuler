@@ -62,7 +62,7 @@ func main() {
 		factors = 4
 	}
 
-	projecteuler.TimedStr(calc, dim, factors)
+	projecteuler.Timed(calc, dim, factors)
 }
 
 func calc(args ...interface{}) (result string, err error) {

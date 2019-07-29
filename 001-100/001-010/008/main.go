@@ -53,7 +53,7 @@ func main() {
 		limit = 13
 	}
 
-	projecteuler.TimedStr(calc, limit)
+	projecteuler.Timed(calc, limit)
 }
 
 func calc(args ...interface{}) (result string, err error) {

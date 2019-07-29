@@ -20,7 +20,7 @@ compliance with British usage.
 */
 
 func main() {
-	projecteuler.TimedStr(calc)
+	projecteuler.Timed(calc)
 }
 
 func calc(args ...interface{}) (result string, err error) {

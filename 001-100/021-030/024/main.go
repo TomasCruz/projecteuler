@@ -41,7 +41,7 @@ func main() {
 		ordinal = 1000000
 	}
 
-	projecteuler.TimedStr(calc, limit, ordinal)
+	projecteuler.Timed(calc, limit, ordinal)
 }
 
 func calc(args ...interface{}) (result string, err error) {
