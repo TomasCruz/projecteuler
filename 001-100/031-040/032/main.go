@@ -19,26 +19,6 @@ Find the sum of all products whose multiplicand/multiplier/product identity can 
 HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
 */
 
-type numberDigits struct {
-	x      int
-	digits map[byte]struct{}
-}
-
-func newNumberDigits(x int) (newNd numberDigits) {
-	newNd = numberDigits{x: x, digits: make(map[byte]struct{})}
-
-	for x > 0 {
-		newNd.digits[byte(x%10)] = struct{}{}
-		x /= 10
-	}
-
-	return
-}
-
-func (nd numberDigits) digitCount() int {
-	return len(nd.digits)
-}
-
 func main() {
 	projecteuler.Timed(calc)
 }
@@ -55,9 +35,10 @@ func calc(args ...interface{}) (result string, err error) {
 
 	primes := projecteuler.Primes(10000, nil)
 	pandigitalProducts := make(map[int]struct{})
+
 	for product := 1234; product <= 9876; product++ {
-		nd := newNumberDigits(product)
-		if differentNonZeroDigits(nd) && checkFactors(nd, primes) {
+		dn := projecteuler.NewDigitalNumber(product)
+		if differentNonZeroDigits(dn) && checkFactors(dn, primes) {
 			pandigitalProducts[product] = struct{}{}
 		}
 	}
@@ -71,25 +52,16 @@ func calc(args ...interface{}) (result string, err error) {
 	return
 }
 
-func differentNonZeroDigits(nd numberDigits) bool {
-	for d := range nd.digits {
-		if d == 0 {
-			return false
-		}
+func differentNonZeroDigits(dn projecteuler.DigitalNumber) bool {
+	if _, ok := dn.DigitMap()[0]; ok {
+		return false
 	}
 
-	digitCount := 0
-	xCopy := nd.x
-	for xCopy > 0 {
-		digitCount++
-		xCopy /= 10
-	}
-
-	return digitCount == len(nd.digits)
+	return dn.DigitCount() == len(dn.DigitMap())
 }
 
-func checkFactors(nd numberDigits, primes []int) bool {
-	factors, _ := projecteuler.Factorize(nd.x, primes)
+func checkFactors(dn projecteuler.DigitalNumber, primes []int) bool {
+	factors, _ := projecteuler.Factorize(dn.X(), primes)
 	divisors := projecteuler.FindDivisors(factors)
 
 	for _, d := range divisors {
@@ -97,14 +69,14 @@ func checkFactors(nd numberDigits, primes []int) bool {
 			continue
 		}
 
-		smallerNd := newNumberDigits(d)
+		smallerNd := projecteuler.NewDigitalNumber(d)
 		if !differentNonZeroDigits(smallerNd) {
 			continue
 		}
 
-		if differentDigits, usedDigits := differentDigitCompositions(nd, smallerNd); differentDigits {
+		if differentDigits, usedDigits := differentDigitCompositions(dn, smallerNd); differentDigits {
 			noPandigital := false
-			rest := nd.x / d
+			rest := dn.X() / d
 
 			for rest > 0 {
 				if _, ok := usedDigits[byte(rest%10)]; ok {
@@ -116,12 +88,12 @@ func checkFactors(nd numberDigits, primes []int) bool {
 			}
 
 			if !noPandigital {
-				greaterNd := newNumberDigits(nd.x / d)
+				greaterNd := projecteuler.NewDigitalNumber(dn.X() / d)
 				if !differentNonZeroDigits(greaterNd) {
 					continue
 				}
 
-				if greaterNd.digitCount()+len(usedDigits) == 9 {
+				if greaterNd.DigitCount()+len(usedDigits) == 9 {
 					return true
 				}
 			}
@@ -131,14 +103,14 @@ func checkFactors(nd numberDigits, primes []int) bool {
 	return false
 }
 
-func differentDigitCompositions(a, b numberDigits) (differentDigits bool, usedDigits map[byte]struct{}) {
+func differentDigitCompositions(a, b projecteuler.DigitalNumber) (differentDigits bool, usedDigits map[byte]struct{}) {
 	usedDigits = make(map[byte]struct{})
 
-	for k := range a.digits {
+	for _, k := range a.Digits() {
 		usedDigits[k] = struct{}{}
 	}
 
-	for k := range b.digits {
+	for _, k := range b.Digits() {
 		if _, ok := usedDigits[k]; ok {
 			return
 		}
