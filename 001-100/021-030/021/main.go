@@ -65,46 +65,10 @@ func calc(args ...interface{}) (result string, err error) {
 }
 
 func divisorSum(factors map[int]int) (sum int) {
-	divisors := findDivisors(factors)
+	divisors := projecteuler.FindDivisors(factors)
 
 	for i := 0; i < len(divisors); i++ {
 		sum += divisors[i]
-	}
-
-	return
-}
-
-func findDivisors(factors map[int]int) (divisors []int) {
-	var firstK, firstV int
-
-	otherFactors := make(map[int]int)
-	for k, v := range factors {
-		if firstK == 0 {
-			firstK = k
-			firstV = v
-		} else {
-			otherFactors[k] = v
-		}
-	}
-
-	powers := make([]int, firstV+1)
-	powers[0] = 1
-	for i := 0; i < firstV; i++ {
-		powers[i+1] = powers[i] * firstK
-	}
-
-	if len(otherFactors) == 0 {
-		return powers
-	}
-
-	otherDivisors := findDivisors(otherFactors)
-	otherDivisorCount := len(otherDivisors)
-	divisors = make([]int, (firstV+1)*otherDivisorCount)
-
-	for i := 0; i <= firstV; i++ {
-		for j := 0; j < otherDivisorCount; j++ {
-			divisors[i*otherDivisorCount+j] = powers[i] * otherDivisors[j]
-		}
 	}
 
 	return
