@@ -40,3 +40,15 @@ func (dn DigitalNumber) DigitMap() map[byte]struct{} {
 func (dn DigitalNumber) DigitCount() int {
 	return len(dn.digits)
 }
+
+// NumberFromDigits calculates number from its reversed digits
+func NumberFromDigits(digits []byte) (value int) {
+	pow, value := 1, 0
+
+	for i := 0; i < len(digits); i++ {
+		value += pow * int(digits[i])
+		pow *= 10
+	}
+
+	return
+}
