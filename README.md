@@ -1,2 +1,2 @@
 # projecteuler
-projecteuler problems
+projecteuler problems GoLang solutions
