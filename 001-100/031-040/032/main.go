@@ -38,7 +38,7 @@ func calc(args ...interface{}) (result string, err error) {
 
 	for product := 1234; product <= 9876; product++ {
 		dn := projecteuler.NewDigitalNumber(product)
-		if differentNonZeroDigits(dn) && checkFactors(dn, primes) {
+		if dn.NonZeroDigits() && dn.DifferentDigits() && checkFactors(dn, primes) {
 			pandigitalProducts[product] = struct{}{}
 		}
 	}
@@ -52,14 +52,6 @@ func calc(args ...interface{}) (result string, err error) {
 	return
 }
 
-func differentNonZeroDigits(dn projecteuler.DigitalNumber) bool {
-	if _, ok := dn.DigitMap()[0]; ok {
-		return false
-	}
-
-	return dn.DigitCount() == len(dn.DigitMap())
-}
-
 func checkFactors(dn projecteuler.DigitalNumber, primes []int) bool {
 	factors, _ := projecteuler.Factorize(dn.X(), primes)
 	divisors := projecteuler.FindDivisors(factors)
@@ -70,11 +62,15 @@ func checkFactors(dn projecteuler.DigitalNumber, primes []int) bool {
 		}
 
 		smallerNd := projecteuler.NewDigitalNumber(d)
-		if !differentNonZeroDigits(smallerNd) {
+		if !smallerNd.NonZeroDigits() || !smallerNd.DifferentDigits() {
 			continue
 		}
 
-		if differentDigits, usedDigits := differentDigitCompositions(dn, smallerNd); differentDigits {
+		usedDigits := make(map[byte]struct{})
+		// put dn's digits in usedDigits set
+		dn.DifferentDigitCompositions(usedDigits)
+
+		if differentDigits := smallerNd.DifferentDigitCompositions(usedDigits); differentDigits {
 			noPandigital := false
 			rest := dn.X() / d
 
@@ -89,7 +85,7 @@ func checkFactors(dn projecteuler.DigitalNumber, primes []int) bool {
 
 			if !noPandigital {
 				greaterNd := projecteuler.NewDigitalNumber(dn.X() / d)
-				if !differentNonZeroDigits(greaterNd) {
+				if !greaterNd.NonZeroDigits() || !greaterNd.DifferentDigits() {
 					continue
 				}
 
@@ -101,23 +97,4 @@ func checkFactors(dn projecteuler.DigitalNumber, primes []int) bool {
 	}
 
 	return false
-}
-
-func differentDigitCompositions(a, b projecteuler.DigitalNumber) (differentDigits bool, usedDigits map[byte]struct{}) {
-	usedDigits = make(map[byte]struct{})
-
-	for _, k := range a.Digits() {
-		usedDigits[k] = struct{}{}
-	}
-
-	for _, k := range b.Digits() {
-		if _, ok := usedDigits[k]; ok {
-			return
-		}
-
-		usedDigits[k] = struct{}{}
-	}
-
-	differentDigits = true
-	return
 }
