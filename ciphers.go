@@ -71,3 +71,32 @@ func DecryptString(encryptedText string, gcm cipher.AEAD) (text string, err erro
 	text = string(textBytes)
 	return
 }
+
+// funcToTest is the type of 'calc' function to test
+type funcToTest func(...interface{}) (string, error)
+
+// FuncForTesting is generic integration test function
+func FuncForTesting(expectedEncryptedString string, f funcToTest, args ...interface{}) (err error) {
+	var result string
+	if result, err = f(args...); err != nil {
+		err = fmt.Errorf("Problem solution execution broke")
+		return
+	}
+
+	var gcm cipher.AEAD
+	if gcm, err = GenerateGcm(); err != nil {
+		return
+	}
+
+	if result, err = EncryptString(result, gcm); err != nil {
+		err = fmt.Errorf("Problem solution encryption failed")
+		return
+	}
+
+	if result != expectedEncryptedString {
+		err = fmt.Errorf("Result incorrect")
+		return
+	}
+
+	return
+}
