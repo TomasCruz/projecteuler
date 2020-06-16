@@ -39,17 +39,16 @@ func main() {
 
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
-
-	p := projecteuler.CreatePentagonals(limit)
+	roots := projecteuler.ReverseSquares(limit)
 
 	minDist := limit * limit
 	notFound := true
 	for i := 1; i < limit && notFound; i++ {
 		for j := 1; i+j < limit; j++ {
 			dist := j * (3*j + 6*i - 1) / 2
-			if p.IsPentagonal(dist) {
+			if projecteuler.IsPentagonal(dist, roots) {
 				sum := dist + i*(6*i-2)/2
-				if p.IsPentagonal(sum) {
+				if projecteuler.IsPentagonal(sum, roots) {
 					if dist < minDist {
 						minDist = dist
 						notFound = false
