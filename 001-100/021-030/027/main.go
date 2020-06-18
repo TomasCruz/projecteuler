@@ -61,8 +61,8 @@ func calc(args ...interface{}) (result string, err error) {
 
 	// b, 1+a+b, 4+2a+b, 9+3a+b, 16+4a+b, 25+5a+b...
 	maxConsecutives, maxA, maxB := 0, 0, 0
-	primesSet := projecteuler.PrimesSet(1000000)
-	primesLimitSet := projecteuler.PrimesSet(limit)
+	_, primesSet := projecteuler.PrimesSet(1000000)
+	_, primesLimitSet := projecteuler.PrimesSet(limit)
 
 	for b := range primesLimitSet {
 		currConsecutives, currA := maxNumberOfConsecutives(limit, b, primesSet)
