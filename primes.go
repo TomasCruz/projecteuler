@@ -34,8 +34,8 @@ func Primes(limit int, f func(...interface{}) bool, args ...interface{}) (primes
 	return
 }
 
-// PrimesSet calculates and returns slice of primes less than limit and puts them in primeSet
-func PrimesSet(limit int) (primes []int, primeSet map[int]struct{}) {
+// PrimeSet calculates and returns slice of primes less than limit and puts them in primeSet
+func PrimeSet(limit int) (primes []int, primeSet map[int]struct{}) {
 	primes = Primes(limit, nil)
 
 	primeSet = make(map[int]struct{})

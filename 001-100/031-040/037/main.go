@@ -28,7 +28,7 @@ func main() {
 
 func calc(args ...interface{}) (result string, err error) {
 	limit := 100000
-	primes, primeSet := projecteuler.PrimesSet(limit)
+	primes, primeSet := projecteuler.PrimeSet(limit)
 
 	rtp := rightTruncatablePrimes(primes, primeSet)
 	biggest := biggestInSet(rtp)

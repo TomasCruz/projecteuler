@@ -42,7 +42,7 @@ type primeSum struct {
 
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
-	primes, primeSet := projecteuler.PrimesSet(limit)
+	primes, primeSet := projecteuler.PrimeSet(limit)
 	primeCount := len(primes)
 	sumMatrix := make([][]int, primeCount)
 

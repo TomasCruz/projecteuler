@@ -46,7 +46,7 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 	roots := projecteuler.ReverseSquares(int(math.Sqrt(float64(limit / 2))))
-	primes, primeSet := projecteuler.PrimesSet(limit)
+	primes, primeSet := projecteuler.PrimeSet(limit)
 
 	for i := 9; i < limit; i++ {
 		if _, ok := primeSet[i]; ok {

@@ -61,11 +61,11 @@ func calc(args ...interface{}) (result string, err error) {
 
 	// b, 1+a+b, 4+2a+b, 9+3a+b, 16+4a+b, 25+5a+b...
 	maxConsecutives, maxA, maxB := 0, 0, 0
-	_, primesSet := projecteuler.PrimesSet(1000000)
-	_, primesLimitSet := projecteuler.PrimesSet(limit)
+	_, primeSet := projecteuler.PrimeSet(1000000)
+	_, primesLimitSet := projecteuler.PrimeSet(limit)
 
 	for b := range primesLimitSet {
-		currConsecutives, currA := maxNumberOfConsecutives(limit, b, primesSet)
+		currConsecutives, currA := maxNumberOfConsecutives(limit, b, primeSet)
 		if currConsecutives > maxConsecutives {
 			maxConsecutives = currConsecutives
 			maxA = currA
@@ -78,11 +78,11 @@ func calc(args ...interface{}) (result string, err error) {
 	return
 }
 
-func maxNumberOfConsecutives(limit, b int, primesSet map[int]struct{}) (consecutiveCount int, maxA int) {
+func maxNumberOfConsecutives(limit, b int, primeSet map[int]struct{}) (consecutiveCount int, maxA int) {
 	consecutiveCount = 1
 
 	for a := 1 - limit; a < limit; a++ {
-		curr := numberOfConsecutives(a, limit, b, primesSet)
+		curr := numberOfConsecutives(a, limit, b, primeSet)
 		if curr > consecutiveCount {
 			consecutiveCount = curr
 			maxA = a
@@ -92,12 +92,12 @@ func maxNumberOfConsecutives(limit, b int, primesSet map[int]struct{}) (consecut
 	return
 }
 
-func numberOfConsecutives(a, limit, b int, primesSet map[int]struct{}) (consecutiveCount int) {
+func numberOfConsecutives(a, limit, b int, primeSet map[int]struct{}) (consecutiveCount int) {
 	consecutiveCount = 1
 
 	for n := 1; ; n++ {
 		expr := n*n + a*n + b
-		if _, ok := primesSet[expr]; !ok {
+		if _, ok := primeSet[expr]; !ok {
 			break
 		}
 
