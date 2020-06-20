@@ -45,40 +45,41 @@ func calc(args ...interface{}) (result string, err error) {
 	primes, primeSet := projecteuler.PrimesSet(limit)
 	primeCount := len(primes)
 	sumMatrix := make([][]int, primeCount)
-	primeSumSet := make(map[primeSum]struct{})
 
-	for i := 0; i < primeCount; i++ {
-		sumMatrix[i] = append(sumMatrix[i], 0)
-		sumMatrix[i] = append(sumMatrix[i], primes[i])
-		lastAdded := sumMatrix[i][1]
-		termCount := 1
+	// dynamically build sumMatrix
+	sumMatrix[primeCount-1] = append(sumMatrix[primeCount-1], primes[primeCount-1])
+	for i := primeCount - 1; i > 0; i-- {
+		sumMatrix[i-1] = append(sumMatrix[i-1], primes[i-1])
 
-		for lastAdded < limit {
-			if i+termCount >= primeCount {
+		for j := 0; j < len(sumMatrix[i]); j++ {
+			sum := sumMatrix[i][j] + primes[i-1]
+			if sum >= limit {
 				break
 			}
 
-			sumMatrix[i] = append(sumMatrix[i], lastAdded+primes[i+termCount])
-			termCount++
-			lastAdded = sumMatrix[i][termCount]
-
-			if _, ok := primeSet[lastAdded]; ok {
-				primeSumSet[primeSum{prime: lastAdded, terms: termCount}] = struct{}{}
-			}
+			sumMatrix[i-1] = append(sumMatrix[i-1], sum)
 		}
 	}
 
+	// find the greatest sum, having maximum number of terms
 	biggestSumPrime := 0
 	maxTermCount := 0
-	for pr := range primeSumSet {
-		if pr.terms > maxTermCount {
-			maxTermCount = pr.terms
-			biggestSumPrime = pr.prime
-			continue
-		}
+	for i := 0; i < primeCount; i++ {
+		for j := len(sumMatrix[i]); j > 0; j-- {
+			currSum := sumMatrix[i][j-1]
+			if _, ok := primeSet[currSum]; ok {
+				if j > maxTermCount {
+					maxTermCount = j
+					biggestSumPrime = currSum
+				}
 
-		if pr.terms == maxTermCount && pr.prime > biggestSumPrime {
-			biggestSumPrime = pr.prime
+				if j == maxTermCount && currSum > biggestSumPrime {
+					biggestSumPrime = currSum
+				}
+
+				// this prime sum is the greatest sum to start with prime[i], so move on to next prime
+				break
+			}
 		}
 	}
 
