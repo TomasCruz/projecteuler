@@ -8,11 +8,15 @@ func Permutations(limit byte, f func(...interface{}) bool, args ...interface{}) 
 		changing = append(changing, i)
 	}
 
-	doPerms(starting, changing, permutations, f, args...)
+	permutations, _ = doPerms(starting, changing, permutations, f, args...)
 	return
 }
 
-func doPerms(starting, changing []byte, perms [][]byte, f func(...interface{}) bool, args ...interface{}) bool {
+func doPerms(starting, changing []byte, perms [][]byte, f func(...interface{}) bool, args ...interface{}) (
+	[][]byte, bool) {
+
+	var halt bool
+
 	if len(changing) == 1 {
 		currPerm := make([]byte, cap(starting))
 		copy(currPerm, starting)
@@ -23,16 +27,19 @@ func doPerms(starting, changing []byte, perms [][]byte, f func(...interface{}) b
 	for i := 0; i < len(changing); i++ {
 		starting = append(starting, changing[i])
 		newChanging := cutOutIndex(changing, i)
-		if doPerms(starting, newChanging, perms, f, args...) {
-			return true
+		perms, halt = doPerms(starting, newChanging, perms, f, args...)
+		if halt {
+			return perms, true
 		}
 		starting = starting[:len(starting)-1]
 	}
 
-	return false
+	return perms, false
 }
 
-func processPerm(currPerm []byte, perms [][]byte, f func(...interface{}) bool, args ...interface{}) bool {
+func processPerm(currPerm []byte, perms [][]byte, f func(...interface{}) bool, args ...interface{}) (
+	[][]byte, bool) {
+
 	perms = append(perms, currPerm)
 	args = append(args, currPerm)
 
@@ -42,7 +49,7 @@ func processPerm(currPerm []byte, perms [][]byte, f func(...interface{}) bool, a
 	}
 	args = args[:len(args)-1]
 
-	return retValue
+	return perms, retValue
 }
 
 func cutOutIndex(changing []byte, index int) (newChanging []byte) {
