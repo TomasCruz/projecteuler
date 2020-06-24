@@ -40,7 +40,7 @@ func calc(args ...interface{}) (result string, err error) {
 		}
 
 		digitOccurencies := digitOccurencies(primes[i])
-		permutations := projecteuler.Permutations(4, func(args ...interface{}) bool { return false })
+		permutations := projecteuler.Permutations(4, nil)
 		permutatedPrimesFound := make(map[int]struct{})
 
 		for _, perm := range permutations {

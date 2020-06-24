@@ -88,3 +88,21 @@ func (dn DigitalNumber) DifferentDigitCompositions(usedDigits map[byte]struct{})
 
 	return
 }
+
+// ReplaceDigits replaces digits in a number with ones from the map (index->new digit)
+func (dn DigitalNumber) ReplaceDigits(replacements map[byte]byte) (value int) {
+	pow := 1
+	value = 0
+
+	for i := 0; i < len(dn.digits); i++ {
+		currDigit := int(dn.digits[i])
+		if newDigit, ok := replacements[byte(len(dn.digits)-i-1)]; ok {
+			currDigit = int(newDigit)
+		}
+
+		value += pow * currDigit
+		pow *= 10
+	}
+
+	return
+}

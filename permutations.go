@@ -1,6 +1,6 @@
 package projecteuler
 
-// Permutations calculates and returns permutations smaller than limit, or until f returns true
+// Permutations calculates and returns permutations of limit elements, or until f returns true
 func Permutations(limit byte, f func(...interface{}) bool, args ...interface{}) (permutations [][]byte) {
 	starting := make([]byte, 0, limit)
 	changing := make([]byte, 0, limit)
@@ -38,18 +38,18 @@ func doPerms(starting, changing []byte, perms [][]byte, f func(...interface{}) b
 }
 
 func processPerm(currPerm []byte, perms [][]byte, f func(...interface{}) bool, args ...interface{}) (
-	[][]byte, bool) {
+	resPerms [][]byte, retValue bool) {
 
-	perms = append(perms, currPerm)
-	args = append(args, currPerm)
-
-	retValue := false
-	if f(args...) {
-		retValue = true
+	resPerms = append(perms, currPerm)
+	if f != nil {
+		args = append(args, currPerm)
+		if f(args...) {
+			retValue = true
+		}
+		args = args[:len(args)-1]
 	}
-	args = args[:len(args)-1]
 
-	return perms, retValue
+	return
 }
 
 func cutOutIndex(changing []byte, index int) (newChanging []byte) {
