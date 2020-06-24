@@ -106,3 +106,37 @@ func (dn DigitalNumber) ReplaceDigits(replacements map[byte]byte) (value int) {
 
 	return
 }
+
+// DigitOccurencies returns the map of digit occurencies
+func (dn DigitalNumber) DigitOccurencies() (occurencies map[byte]int) {
+	occurencies = make(map[byte]int)
+	for _, d := range dn.Digits() {
+		if occ, ok := occurencies[d]; !ok {
+			occurencies[d] = 1
+		} else {
+			occurencies[d] = occ + 1
+		}
+	}
+
+	return
+}
+
+// SameDigitSet returns true iff d2 has the same multiset of digits as dn
+func (dn DigitalNumber) SameDigitSet(d2 DigitalNumber) bool {
+	o1 := dn.DigitOccurencies()
+	o2 := d2.DigitOccurencies()
+
+	if o1 == nil || o2 == nil || len(o1) != len(o2) {
+		return false
+	}
+
+	for d, occ := range o1 {
+		if occ2, ok := o2[d]; !ok {
+			return false
+		} else if occ != occ2 {
+			return false
+		}
+	}
+
+	return true
+}
