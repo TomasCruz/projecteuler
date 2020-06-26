@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// Factorize returns prime factorization of num
+// Factorize returns prime factorization of num. Returns error if primes doesn't contain all prime factors of num
 func Factorize(num int, primes []int) (factors map[int]int, err error) {
 	factors = make(map[int]int)
 
