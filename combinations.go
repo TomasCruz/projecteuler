@@ -6,7 +6,6 @@ func Combinations(n, k byte, f func(...interface{}) bool, args ...interface{}) (
 	combinations [][]byte, retValue bool) {
 
 	if k == 0 {
-		//combinations = [][]byte{[]byte{}}
 		slZeroes := make([]byte, n)
 		combinations = [][]byte{slZeroes}
 		return
@@ -24,20 +23,28 @@ func Combinations(n, k byte, f func(...interface{}) bool, args ...interface{}) (
 
 	// combinations without the last element
 	combWO, _ := Combinations(n-1, k, nil)
-	for _, c := range combWO {
-		newC := append(c, 0)
-		combinations = append(combinations, newC)
-		retValue = processComb(newC, f, args...)
-		if retValue {
-			return
-		}
+	combinations, retValue = appendLastElement(0, combWO, f, args...)
+	if retValue {
+		return
 	}
 
 	// combinations with the last element
 	combW, _ := Combinations(n-1, k-1, nil)
-	for _, c := range combW {
-		newC := append(c, 1)
-		combinations = append(combinations, newC)
+	combW, retValue = appendLastElement(1, combW, f, args...)
+	if retValue {
+		return
+	}
+	combinations = append(combinations, combW...)
+
+	return
+}
+
+func appendLastElement(element byte, combinations [][]byte, f func(...interface{}) bool, args ...interface{}) (
+	newCombinations [][]byte, retValue bool) {
+
+	for _, c := range combinations {
+		newC := append(c, element)
+		newCombinations = append(newCombinations, newC)
 		retValue = processComb(newC, f, args...)
 		if retValue {
 			return
