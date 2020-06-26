@@ -1,5 +1,5 @@
 module github.com/TomasCruz/projecteuler
 
-go 1.13
+go 1.14
 
-require gonum.org/v1/gonum v0.0.0-20190724213354-3129c79de289
+require gonum.org/v1/gonum v0.7.0
