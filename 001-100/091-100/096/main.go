@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strconv"
 	"strings"
+	"sync"
 
 	"github.com/TomasCruz/projecteuler"
 	"github.com/TomasCruz/projecteuler/001-100/091-100/096/sudoku"
@@ -59,12 +61,28 @@ func calc(args ...interface{}) (result string, err error) {
 	}
 	length := len(sudokuStrings)
 
+	puzzles := make([]*sudoku.Sudoku, length)
+	wg := sync.WaitGroup{}
+	wgGuard := make(chan int, runtime.GOMAXPROCS(runtime.NumCPU()))
+
 	var resInt int
 	for i := 0; i < length; i++ {
+		wgGuard <- 1
+		wg.Add(1)
+
 		sud := sudoku.NewSudoku(sudokuStrings[i])
-		s := &sud
-		s.Solve()
-		resInt += s.FirstThree()
+		puzzles[i] = &sud
+
+		go func(sud *sudoku.Sudoku) {
+			sud.Solve()
+			<-wgGuard
+			wg.Done()
+		}(puzzles[i])
+	}
+	wg.Wait()
+
+	for i := 0; i < length; i++ {
+		resInt += puzzles[i].FirstThree()
 	}
 
 	result = strconv.Itoa(resInt)
