@@ -31,9 +31,14 @@ func MakeBigInt(input string) (result BigInt, err error) {
 	return
 }
 
+// DigitCount returns digit count
+func (bi BigInt) DigitCount() int {
+	return len(bi.digits)
+}
+
 // Clone clones BigInt
-func (bi *BigInt) Clone() (result BigInt) {
-	result.digits = make([]byte, len(bi.digits))
+func (bi BigInt) Clone() (result *BigInt) {
+	result = &BigInt{digits: make([]byte, len(bi.digits))}
 	copy(result.digits, bi.digits)
 	return
 }
@@ -123,10 +128,9 @@ func MulBigInts(one BigInt, two BigInt) (result BigInt) {
 
 	for i := 0; i < len(two.digits); i++ {
 		temp := one.Clone()
-		tempPtr := &temp
-		tempPtr.mulDigit(two.digits[i])
-		tempPtr.MulPowTen(i)
-		result = AddBigInts(result, *tempPtr)
+		temp.mulDigit(two.digits[i])
+		temp.MulPowTen(i)
+		result = AddBigInts(result, *temp)
 	}
 
 	return
@@ -144,14 +148,15 @@ func (bi *BigInt) PowBigInt(pow int) {
 
 	temp := bi.Clone()
 	for i := 1; i < pow; i++ {
-		temp = MulBigInts(temp, *bi)
+		m := MulBigInts(*temp, *bi)
+		temp = &m
 	}
 
 	bi.digits = temp.digits
 }
 
 // IsPalindrome returns true iff bi is a palindrome
-func (bi *BigInt) IsPalindrome() bool {
+func (bi BigInt) IsPalindrome() bool {
 	limit := len(bi.digits) / 2
 	for i := 0; i < limit; i++ {
 		if bi.digits[i] != bi.digits[len(bi.digits)-i-1] {

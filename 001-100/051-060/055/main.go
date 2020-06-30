@@ -72,7 +72,7 @@ func isLychrel(x int) bool {
 	for i := 1; i < 50; i++ {
 		argRev := arg.Clone()
 		argRev.ReverseDigits()
-		arg.AddTo(argRev)
+		arg.AddTo(*argRev)
 		if arg.IsPalindrome() {
 			return false
 		}
