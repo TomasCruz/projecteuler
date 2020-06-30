@@ -8,7 +8,7 @@ type BigInt struct {
 }
 
 // MakeBigIntFromInt constructs BigInt out of int
-func MakeBigIntFromInt(input int) (result BigInt, err error) {
+func MakeBigIntFromInt(input int) (result BigInt) {
 	result.digits = make([]byte, 0)
 
 	for i := 0; input > 0; i++ {
@@ -31,10 +31,10 @@ func MakeBigInt(input string) (result BigInt, err error) {
 	return
 }
 
-// CloneBigInt clones BigInt
-func CloneBigInt(rhs BigInt) (result BigInt) {
-	result.digits = make([]byte, len(rhs.digits))
-	copy(result.digits, rhs.digits)
+// Clone clones BigInt
+func (bi *BigInt) Clone() (result BigInt) {
+	result.digits = make([]byte, len(bi.digits))
+	copy(result.digits, bi.digits)
 	return
 }
 
@@ -103,6 +103,73 @@ func (bi BigInt) DigitSum() int {
 	return retValue
 }
 
+// MulPowTen multiplies BigInt with power of ten
+func (bi *BigInt) MulPowTen(pow int) {
+	if pow == 0 {
+		return
+	}
+
+	newDigits := make([]byte, len(bi.digits)+pow)
+	for i := 0; i < len(bi.digits); i++ {
+		newDigits[i+pow] = bi.digits[i]
+	}
+
+	bi.digits = newDigits
+}
+
+// MulBigInts multiplies BigInts
+func MulBigInts(one BigInt, two BigInt) (result BigInt) {
+	result.digits = make([]byte, 1)
+
+	for i := 0; i < len(two.digits); i++ {
+		temp := one.Clone()
+		tempPtr := &temp
+		tempPtr.mulDigit(two.digits[i])
+		tempPtr.MulPowTen(i)
+		result = AddBigInts(result, *tempPtr)
+	}
+
+	return
+}
+
+// PowBigInt returns power of BigInt
+func (bi *BigInt) PowBigInt(pow int) {
+	if pow == 0 {
+		bi.digits = make([]byte, 1)
+		bi.digits[0] = 1
+		return
+	} else if pow == 1 {
+		return
+	}
+
+	temp := bi.Clone()
+	for i := 1; i < pow; i++ {
+		temp = MulBigInts(temp, *bi)
+	}
+
+	bi.digits = temp.digits
+}
+
+// IsPalindrome returns true iff bi is a palindrome
+func (bi *BigInt) IsPalindrome() bool {
+	limit := len(bi.digits) / 2
+	for i := 0; i < limit; i++ {
+		if bi.digits[i] != bi.digits[len(bi.digits)-i-1] {
+			return false
+		}
+	}
+
+	return true
+}
+
+// ReverseDigits reverses digits of bi
+func (bi *BigInt) ReverseDigits() {
+	limit := len(bi.digits) / 2
+	for i := 0; i < limit; i++ {
+		bi.digits[i], bi.digits[len(bi.digits)-i-1] = bi.digits[len(bi.digits)-i-1], bi.digits[i]
+	}
+}
+
 func (bi *BigInt) mulDigit(d byte) {
 	if d == 0 {
 		bi.digits = []byte{0}
@@ -128,51 +195,4 @@ func (bi *BigInt) mulDigit(d byte) {
 	if carry != 0 {
 		bi.digits = append(bi.digits, carry)
 	}
-}
-
-// MulPowTen multiplies BigInt with power of ten
-func (bi *BigInt) MulPowTen(pow int) {
-	if pow == 0 {
-		return
-	}
-
-	newDigits := make([]byte, len(bi.digits)+pow)
-	for i := 0; i < len(bi.digits); i++ {
-		newDigits[i+pow] = bi.digits[i]
-	}
-
-	bi.digits = newDigits
-}
-
-// MulBigInts multiplies BigInts
-func MulBigInts(one BigInt, two BigInt) (result BigInt) {
-	result.digits = make([]byte, 1)
-
-	for i := 0; i < len(two.digits); i++ {
-		temp := CloneBigInt(one)
-		tempPtr := &temp
-		tempPtr.mulDigit(two.digits[i])
-		tempPtr.MulPowTen(i)
-		result = AddBigInts(result, *tempPtr)
-	}
-
-	return
-}
-
-// PowBigInt rewturns power of BigInt
-func (bi *BigInt) PowBigInt(pow int) {
-	if pow == 0 {
-		bi.digits = make([]byte, 1)
-		bi.digits[0] = 1
-		return
-	} else if pow == 1 {
-		return
-	}
-
-	temp := CloneBigInt(*bi)
-	for i := 1; i < pow; i++ {
-		temp = MulBigInts(temp, *bi)
-	}
-
-	bi.digits = temp.digits
 }
