@@ -84,7 +84,7 @@ func (s *Sudoku) Solve() {
 	var subPuzzles []*Sudoku
 	uns := s.firstUnsolved()
 	wg := sync.WaitGroup{}
-	wgGuard := make(chan int, runtime.GOMAXPROCS(runtime.NumCPU()))
+	threadPerCoreGuard := make(chan int, runtime.GOMAXPROCS(runtime.NumCPU()))
 
 	for x := range s.marks[uns.r][uns.c] {
 		s1 := &Sudoku{}
@@ -92,11 +92,11 @@ func (s *Sudoku) Solve() {
 		s1.solveCell(uns, x)
 		subPuzzles = append(subPuzzles, s1)
 
-		wgGuard <- 1
+		threadPerCoreGuard <- 1
 		wg.Add(1)
 		go func(sud *Sudoku) {
 			sud.Solve()
-			<-wgGuard
+			<-threadPerCoreGuard
 			wg.Done()
 		}(s1)
 	}
