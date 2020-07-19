@@ -37,9 +37,10 @@ func newKidBrothers(setSize, limit int) kidBrothers {
 
 func (kbs *kidBrothers) findLowestSetSum() {
 	prevResultCount := 0
-	soFar := make([]int, 0, kbs.setSize)
+	set := make([]int, 0, kbs.setSize)
 
-	for i := kbs.setSize - 1; i < kbs.primeCount; i++ {
+	firstSolution := false
+	for i := kbs.setSize - 1; i < kbs.primeCount && !firstSolution; i++ {
 		if kbs.primes[i] >= kbs.winnerSum {
 			break
 		}
@@ -49,15 +50,17 @@ func (kbs *kidBrothers) findLowestSetSum() {
 			continue
 		}
 
-		soFar = append(soFar, i)
-		kbs.findBroSet(soFar)
-		soFar = soFar[:len(soFar)-1]
+		set = append(set, i)
+		kbs.findBroSet(set)
+		set = set[:len(set)-1]
 
 		newResultCount := len(kbs.resultSets)
 		for i := prevResultCount; i < newResultCount; i++ {
 			sum := kbs.primeSetSum(kbs.resultSets[i])
 			if sum < kbs.winnerSum {
 				kbs.winnerSum = sum
+				firstSolution = true
+				break
 			}
 		}
 		prevResultCount = newResultCount
@@ -131,23 +134,23 @@ func (kbs kidBrothers) primeSetSum(set []int) int {
 	return sum
 }
 
-func (kbs *kidBrothers) findBroSet(soFar []int) {
-	if len(soFar) == kbs.setSize {
+func (kbs *kidBrothers) findBroSet(set []int) {
+	if len(set) == kbs.setSize {
 		newSl := make([]int, kbs.setSize)
-		copy(newSl, soFar)
+		copy(newSl, set)
 		kbs.resultSets = append(kbs.resultSets, newSl)
 
-		/*fmt.Printf("%d\t\t[", kbs.primeSetSum(soFar))
+		/*fmt.Printf("%d\t\t[", kbs.primeSetSum(set))
 		for i := 0; i < kbs.setSize; i++ {
-			fmt.Printf("%d ", kbs.primes[soFar[i]])
+			fmt.Printf("%d ", kbs.primes[set[i]])
 		}
 		fmt.Println("]")*/
 
 		return
 	}
 
-	wantedKidBros := kbs.setSize - len(soFar)
-	lastInSet := soFar[len(soFar)-1]
+	wantedKidBros := kbs.setSize - len(set)
+	lastInSet := set[len(set)-1]
 	existingKidBros := len(kbs.kidBros[lastInSet])
 	if existingKidBros < wantedKidBros {
 		return
@@ -156,7 +159,7 @@ func (kbs *kidBrothers) findBroSet(soFar []int) {
 	for i := 0; i < existingKidBros; i++ {
 		currKidBro := kbs.kidBrosSlice[lastInSet][i]
 
-		if !kbs.kidBroToPrevious(currKidBro, soFar) {
+		if !kbs.kidBroToPrevious(currKidBro, set) {
 			continue
 		}
 
@@ -167,7 +170,7 @@ func (kbs *kidBrothers) findBroSet(soFar []int) {
 
 		foundSetBros := 0
 		for j := 0; j < len(currKidKidBros); j++ {
-			if kbs.kidBroToPrevious(currKidKidBros[j], soFar) {
+			if kbs.kidBroToPrevious(currKidKidBros[j], set) {
 				foundSetBros++
 				if foundSetBros == wantedKidBros-1 {
 					break
@@ -176,9 +179,9 @@ func (kbs *kidBrothers) findBroSet(soFar []int) {
 		}
 
 		if foundSetBros == wantedKidBros-1 {
-			soFar = append(soFar, currKidBro)
-			kbs.findBroSet(soFar)
-			soFar = soFar[:len(soFar)-1]
+			set = append(set, currKidBro)
+			kbs.findBroSet(set)
+			set = set[:len(set)-1]
 		}
 	}
 }
