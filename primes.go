@@ -45,3 +45,19 @@ func PrimeSet(limit int) (primes []int, primeSet map[int]struct{}) {
 
 	return
 }
+
+// IsPrime returns true iff x is prime
+func IsPrime(x int64) bool {
+	if x%2 == 0 {
+		return false
+	}
+
+	root := int64(math.Sqrt(float64(x)))
+	for i := int64(3); i <= root; i += 2 {
+		if x%i == 0 {
+			return false
+		}
+	}
+
+	return true
+}
