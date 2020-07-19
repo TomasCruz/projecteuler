@@ -97,6 +97,17 @@ func (bi BigInt) String() string {
 	return sb.String()
 }
 
+// Int returns int64 value of bi. If bi respresents too big number, int64 will overflow.
+func (bi BigInt) Int() int64 {
+	num := int64(0)
+	for i := len(bi.digits); i > 0; i-- {
+		num *= 10
+		num += int64(bi.digits[i-1])
+	}
+
+	return num
+}
+
 // DigitSum returns sum of the digits
 func (bi BigInt) DigitSum() int {
 	retValue := 0
@@ -173,6 +184,11 @@ func (bi *BigInt) ReverseDigits() {
 	for i := 0; i < limit; i++ {
 		bi.digits[i], bi.digits[len(bi.digits)-i-1] = bi.digits[len(bi.digits)-i-1], bi.digits[i]
 	}
+}
+
+// Concatenate appends rhs digits to bi
+func (bi *BigInt) Concatenate(rhs BigInt) {
+	bi.digits = append(rhs.digits, bi.digits...)
 }
 
 func (bi *BigInt) mulDigit(d byte) {

@@ -1,7 +1,8 @@
 package projecteuler
 
-// Combinations calculates and returns combinations of k out of n elements. n has to be greater or equal to k.
-// Each slice in the resulting matrix has 1s per elements used in a particular combination.
+// Combinations calculates and returns combinations of k out of n elements, or until f returns true.
+// n has to be greater or equal to k. Each slice in the resulting combination matrix has 1s per elements
+// used in a particular combination.
 func Combinations(n, k byte, f func(...interface{}) bool, args ...interface{}) (
 	combinations [][]byte, retValue bool) {
 
