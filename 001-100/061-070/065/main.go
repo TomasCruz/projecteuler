@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"strconv"
 
 	"github.com/TomasCruz/projecteuler"
 )
@@ -13,22 +16,35 @@ see ./problem065.pdf
 */
 
 func main() {
-	projecteuler.Timed(calc, 10000)
+	var convergentCount int
+
+	if len(os.Args) > 1 {
+		convergentCount64, err := strconv.ParseInt(os.Args[1], 10, 64)
+		if err != nil {
+			log.Fatal("bad argument")
+		}
+
+		convergentCount = int(convergentCount64)
+	} else {
+		convergentCount = 100
+	}
+
+	projecteuler.Timed(calc, convergentCount)
 }
 
 func calc(args ...interface{}) (result string, err error) {
-	limit := args[0].(int)
+	convergentCount := args[0].(int)
 
-	elems := make([]*projecteuler.RootIntElement, 0, (limit+2)/3+1)
+	elems := make([]*projecteuler.RootIntElement, 0, (convergentCount+2)/3+1)
 	elems = append(elems, &projecteuler.RootIntElement{Head: 2})
 	elems = append(elems, &projecteuler.RootIntElement{Head: 1})
-	for i := 1; i <= 33; i++ {
+	for i := 1; i <= (convergentCount-1)/3; i++ {
 		elems = append(elems, &projecteuler.RootIntElement{Head: 2 * i})
 	}
 
-	newElems := make([]*projecteuler.RootIntElement, limit)
+	newElems := make([]*projecteuler.RootIntElement, convergentCount)
 	newElems[0] = elems[0]
-	for i := 1; i < 100; i++ {
+	for i := 1; i < convergentCount; i++ {
 		newElems[i] = eElements(elems).eInd(i)
 	}
 
