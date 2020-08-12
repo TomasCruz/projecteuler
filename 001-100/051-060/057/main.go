@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"math/big"
 	"os"
 	"strconv"
 
@@ -46,14 +47,14 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
-	prevIter := projecteuler.MakeFraction(projecteuler.MakeBigIntFromInt(1), projecteuler.MakeBigIntFromInt(1))
+	prevIter := projecteuler.MakeFraction(big.NewInt(1), big.NewInt(1))
 	res := 0
 	for i := 1; i < limit; i++ {
 		prevIter.AddInt(1)
 		prevIter.Invert()
 		prevIter.AddInt(1)
-		numCount := prevIter.Numerator().DigitCount()
-		denomCount := prevIter.Denominator().DigitCount()
+		numCount := len(prevIter.Numerator().String())
+		denomCount := len(prevIter.Denominator().String())
 
 		if numCount > denomCount {
 			res++

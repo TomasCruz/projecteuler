@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/big"
 	"os"
 	"strconv"
 
@@ -39,7 +40,7 @@ func calc(args ...interface{}) (result string, err error) {
 	elems = append(elems, &projecteuler.RootIntElement{Head: 2})
 	elems = append(elems, &projecteuler.RootIntElement{Head: 1})
 	for i := 1; i <= (convergentCount-1)/3; i++ {
-		elems = append(elems, &projecteuler.RootIntElement{Head: 2 * i})
+		elems = append(elems, &projecteuler.RootIntElement{Head: int64(2 * i)})
 	}
 
 	newElems := make([]*projecteuler.RootIntElement, convergentCount)
@@ -49,8 +50,19 @@ func calc(args ...interface{}) (result string, err error) {
 	}
 
 	bif := projecteuler.CalcElements(newElems)
-	result = fmt.Sprint(bif.Numerator().DigitSum())
+	result = fmt.Sprint(digitSum(bif.Numerator()))
 	return
+}
+
+func digitSum(x *big.Int) int {
+	s := x.String()
+	r := 0
+
+	for i := 0; i < len(s); i++ {
+		r += int(s[i] - '0')
+	}
+
+	return r
 }
 
 type eElements []*projecteuler.RootIntElement
