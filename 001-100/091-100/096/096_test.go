@@ -7,7 +7,11 @@ import (
 )
 
 func TestProb096(t *testing.T) {
-	if err := projecteuler.FuncForTesting("cGFzc3BocmFzZXdoBZKJcN0Y0Pqe3JPkg11pBggDResP", calc, "p096_sudoku.txt"); err != nil {
+	if err := projecteuler.FuncForTesting(
+		"cGFzc3BocmFzZXdo9RslSIl3nLX0UVDalvZQlx0ssec3",
+		calc,
+		"p096_sudoku.txt",
+	); err != nil {
 		t.Errorf(err.Error())
 	}
 }

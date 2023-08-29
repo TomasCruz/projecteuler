@@ -31,7 +31,7 @@ func GenerateGcm() (gcm cipher.AEAD, err error) {
 	return
 }
 
-//EncryptString encrypts
+// EncryptString encrypts
 func EncryptString(txt string, gcm cipher.AEAD) (encryptedText string, err error) {
 	nonce := make([]byte, gcm.NonceSize())
 	r := strings.NewReader("passphrasewhichneedstobe32bytes!")
