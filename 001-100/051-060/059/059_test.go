@@ -7,7 +7,11 @@ import (
 )
 
 func TestProb059(t *testing.T) {
-	if err := projecteuler.FuncForTesting("cGFzc3BocmFzZXdoBpSHdNtSfUSNZxdBs53juTNWnNclUg==", calc, "p059_cipher.txt"); err != nil {
+	if err := projecteuler.FuncForTesting(
+		"cGFzc3BocmFzZXdo9h0rTI/iWY2nBfIOwfn/x03Tjk0Kwg==",
+		calc,
+		"p059_cipher.txt",
+	); err != nil {
 		t.Errorf(err.Error())
 	}
 }

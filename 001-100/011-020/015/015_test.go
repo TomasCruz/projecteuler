@@ -7,7 +7,11 @@ import (
 )
 
 func TestProb015(t *testing.T) {
-	if err := projecteuler.FuncForTesting("cGFzc3BocmFzZXdoBpWJeNtcK3ZYD4Lj3c9IutobxuR8/AQ2pVTAGQ==", calc, 20); err != nil {
+	if err := projecteuler.FuncForTesting(
+		"cGFzc3BocmFzZXdo9hwlQI/sEqX4SdPQ+LfTPxnWjhhO8rfgsYKY9A==",
+		calc,
+		20,
+	); err != nil {
 		t.Errorf(err.Error())
 	}
 }

@@ -8,8 +8,11 @@ import (
 
 func TestProb066(t *testing.T) {
 	if err := projecteuler.FuncForTesting(
-		"cGFzc3BocmFzZXdoAZCPGSshz7O2dN0lmKrWn/HNyg==",
-		calc, 1000, chakravalaSolver{}); err != nil {
+		"cGFzc3BocmFzZXdo8RkjBCxt1BcdOi1MH/o20ye/gQ==",
+		calc,
+		1000,
+		chakravalaSolver{},
+	); err != nil {
 
 		t.Errorf(err.Error())
 	}
