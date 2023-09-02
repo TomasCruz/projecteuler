@@ -6,13 +6,12 @@ import (
 	"github.com/TomasCruz/projecteuler"
 )
 
-func TestProb003(t *testing.T) {
+func TestProb068(t *testing.T) {
 	if err := projecteuler.FuncForTesting(
-		"cGFzc3BocmFzZXdo8RcnTxhJ2j+Tr79fbyrFYvdcW6Q=",
+		"cGFzc3BocmFzZXdo8RohSYvpFq7xRdnUzLFFW0PeyzKGTkmqQ4r/GrJF+nE=",
 		calc,
-		int64(600851475143),
+		5,
 	); err != nil {
-
 		t.Errorf(err.Error())
 	}
 }

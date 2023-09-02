@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-// GenerateGcm creates cipher key, I guess
+// GenerateGcm creates cipher key
 func GenerateGcm() (gcm cipher.AEAD, err error) {
 	passPhrase := os.Getenv("PROJECT_EULER_PSWD")
 	pswd := []byte(passPhrase)
@@ -79,7 +79,7 @@ type funcToTest func(...interface{}) (string, error)
 func FuncForTesting(expectedEncryptedString string, f funcToTest, args ...interface{}) (err error) {
 	var result string
 	if result, err = f(args...); err != nil {
-		err = fmt.Errorf("Problem solution execution broke")
+		err = fmt.Errorf("solution execution broke: %v", err)
 		return
 	}
 
@@ -89,7 +89,7 @@ func FuncForTesting(expectedEncryptedString string, f funcToTest, args ...interf
 	}
 
 	if result, err = EncryptString(result, gcm); err != nil {
-		err = fmt.Errorf("Problem solution encryption failed")
+		err = fmt.Errorf("solution encryption failed: %v", err)
 		return
 	}
 
