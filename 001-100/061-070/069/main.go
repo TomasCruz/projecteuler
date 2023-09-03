@@ -63,8 +63,7 @@ func calc(args ...interface{}) (result string, err error) {
 		}
 		sort.Ints(currFactors)
 
-		totient := projecteuler.Totient(n, currFactors)
-		numberDividedByTotient[n] = float64(n) / float64(totient)
+		numberDividedByTotient[n] = projecteuler.NumDividedByTotient(n, currFactors)
 	}
 
 	maxN := -1
