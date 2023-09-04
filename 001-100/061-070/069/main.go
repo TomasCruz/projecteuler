@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"sort"
 	"strconv"
 
 	"github.com/TomasCruz/projecteuler"
@@ -52,18 +51,7 @@ func calc(args ...interface{}) (result string, err error) {
 	numberDividedByTotient := make([]float64, limit)
 
 	for n := 2; n < limit; n++ {
-		factors, err := projecteuler.Factorize(n, primes)
-		if err != nil {
-			return "", err
-		}
-
-		currFactors := []int{}
-		for f := range factors {
-			currFactors = append(currFactors, f)
-		}
-		sort.Ints(currFactors)
-
-		numberDividedByTotient[n] = projecteuler.NumDividedByTotient(n, currFactors)
+		numberDividedByTotient[n] = projecteuler.NumDividedByTotient(n, primes)
 	}
 
 	maxN := -1

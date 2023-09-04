@@ -1,25 +1,25 @@
 package projecteuler
 
-func Totient(n int, factorSlice []int) int {
-	factorProduct := 1
-	totient := 1
+func Totient(n int, primes []int) int {
+	result := n
 
-	for _, f := range factorSlice {
-		factorProduct *= f
-		totient *= f - 1
+	// Consider all prime factors of n and for every prime factor p, and subtract their multiples from result
+	for i := 0; primes[i]*primes[i] <= n; i++ {
+		if n%primes[i] == 0 {
+			for n%primes[i] == 0 {
+				n /= primes[i]
+			}
+			result -= result / primes[i]
+		}
 	}
 
-	return (totient * n) / factorProduct
+	if n > 1 {
+		result -= result / n
+	}
+
+	return result
 }
 
-func NumDividedByTotient(n int, factorSlice []int) float64 {
-	factorProduct := 1
-	totient := 1
-
-	for _, f := range factorSlice {
-		factorProduct *= f
-		totient *= f - 1
-	}
-
-	return float64(factorProduct) / float64(totient)
+func NumDividedByTotient(n int, primes []int) float64 {
+	return float64(n) / float64(Totient(n, primes))
 }
