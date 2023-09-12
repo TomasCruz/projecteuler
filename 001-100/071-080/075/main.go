@@ -47,7 +47,6 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
-	// primes := projecteuler.Primes(limit, nil)
 	tree := projecteuler.NewFibonacciBoxTernaryTree(1, 1, 2, 3)
 	tree.Generate(limit)
 	triplets := tree.TripletSlice()
@@ -70,19 +69,6 @@ func calc(args ...interface{}) (result string, err error) {
 		}
 	}
 
-	// k := 0
-	// fmt.Printf("%d", tripletLengthSlice[0])
-	// for i := 1; i < tripletsLength; i++ {
-	// 	fmt.Printf(", %d", tripletLengthSlice[i])
-	// 	if k == 20 {
-	// 		fmt.Println()
-	// 		k = 0
-	// 	}
-	// 	k++
-	// }
-	// fmt.Println()
-	// fmt.Println()
-
 	count := 0
 	for i := range lengths {
 		if lengths[i] == 1 {
@@ -90,109 +76,6 @@ func calc(args ...interface{}) (result string, err error) {
 		}
 	}
 
-	// for lengthOfWire := 12; lengthOfWire <= limit; lengthOfWire++ {
-	// 	// find smallest tripletLengthSlice index greater or equal to lengthOfWire
-	// 	currLimit := binarySearch(lengthOfWire, tripletLengthSlice, 0, tripletsLength-1)
-	// 	// fmt.Printf("binarySearch %d: %d\n", lengthOfWire, currLimit)
-
-	// 	wg := sync.WaitGroup{}
-	// 	threadPerCoreGuard := make(chan int, runtime.GOMAXPROCS(runtime.NumCPU()))
-	// 	solvingResult := make([]int, currLimit)
-	// 	for i := 0; i < currLimit; i++ {
-	// 		threadPerCoreGuard <- 1
-	// 		wg.Add(1)
-	// 		go func(i, x, y int) {
-	// 			m := x % y
-	// 			if m == 0 {
-	// 				solvingResult[i] = 1
-	// 			}
-
-	// 			<-threadPerCoreGuard
-	// 			wg.Done()
-	// 		}(i, lengthOfWire, tripletLengthSlice[i])
-	// 	}
-	// 	wg.Wait()
-
-	// 	currSolutionCount := 0
-	// 	for _, x := range solvingResult {
-	// 		currSolutionCount += x
-	// 		if currSolutionCount > 1 {
-	// 			break
-	// 		}
-	// 	}
-	// 	if currSolutionCount == 1 {
-	// 		count++
-	// 	}
-
-	// oneFound := false
-	// twoFound := false
-	// for i := 0; i < tripletsLength; i++ {
-	// 	currLength := tripletLengthSlice[i]
-	// 	if currLength > lengthOfWire {
-	// 		break
-	// 	}
-
-	// 		// // sub-puzzles
-	// 		// var subPuzzles []*Sudoku
-	// 		// uns := s.firstUnsolved()
-	// 		// wg := sync.WaitGroup{}
-	// 		// threadPerCoreGuard := make(chan int, runtime.GOMAXPROCS(runtime.NumCPU()))
-	// 		// solvingResult := make(chan int, length)
-
-	// 		// for x := range s.marks[uns.r][uns.c] {
-	// 		// 	s1 := &Sudoku{}
-	// 		// 	s1.copy(s)
-	// 		// 	s1.solveCell(uns, x)
-	// 		// 	subPuzzles = append(subPuzzles, s1)
-
-	// 		// 	threadPerCoreGuard <- 1
-	// 		// 	wg.Add(1)
-	// 		// 	go func(sud *Sudoku) {
-	// 		// 		sud.Solve()
-	// 		// 		<-threadPerCoreGuard
-	// 		// 		wg.Done()
-	// 		// 	}(s1)
-	// 		// }
-	// 		// wg.Wait()
-
-	// 		// for s := range solvingResult {
-	// 		// 	resInt += s
-	// 		// }
-
-	// 	if lengthOfWire%currLength == 0 {
-	// 		if oneFound {
-	// 			twoFound = true
-	// 			break
-	// 		} else {
-	// 			oneFound = true
-	// 		}
-	// 	}
-	// }
-
-	// if oneFound && !twoFound {
-	// 	count++
-	// }
-	// }
-
 	result = strconv.Itoa(count)
 	return
-}
-
-func binarySearch(x int, slice []int, firstIndex, lastIndex int) int {
-	if lastIndex-firstIndex <= 2 {
-		return lastIndex
-	}
-
-	middleIndex := (firstIndex + lastIndex) / 2
-	if x == slice[middleIndex] {
-		return middleIndex + 1
-	} else if x < slice[middleIndex] {
-		return binarySearch(x, slice, firstIndex, middleIndex)
-	}
-
-	if middleIndex < lastIndex && slice[middleIndex+1] > x {
-		return middleIndex + 1
-	}
-
-	return binarySearch(x, slice, middleIndex+1, lastIndex)
 }
