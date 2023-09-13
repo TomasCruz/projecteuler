@@ -40,7 +40,7 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
-	m := projecteuler.GeneratePartitionMatrix(limit)
+	m := generatePartitionMatrix(limit)
 	sum := 0
 	for i := 1; i < limit; i++ {
 		sum += m[limit][i]
@@ -48,4 +48,32 @@ func calc(args ...interface{}) (result string, err error) {
 
 	result = strconv.Itoa(sum)
 	return
+}
+
+func generatePartitionMatrix(limit int) [][]int {
+	// init
+	m := make([][]int, limit+1)
+	for i := 0; i <= limit; i++ {
+		m[i] = make([]int, limit+1)
+	}
+
+	m[1][1] = 1
+	for i := 2; i <= limit; i++ {
+		m[i][1] = 1
+		m[i][2] = i / 2
+		m[i][i-1] = 1
+		m[i][i] = 1
+	}
+
+	for i := 5; i <= limit; i++ {
+		for j := 3; j < i-1; j++ {
+			sum := 0
+			for k := 1; k <= j; k++ {
+				sum += m[i-j][k]
+			}
+			m[i][j] = sum
+		}
+	}
+
+	return m
 }
