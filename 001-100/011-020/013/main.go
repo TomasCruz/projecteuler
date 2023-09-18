@@ -144,19 +144,11 @@ func calc(args ...interface{}) (result string, err error) {
 
 	numbers := make([]projecteuler.BigInt, 100)
 	for i, line := range textNumbers {
-		if numbers[i], err = projecteuler.MakeBigInt(line); err != nil {
-			fmt.Println(err)
-			return
-		}
+		numbers[i] = projecteuler.MakeBigInt(line)
 	}
 
-	var zero projecteuler.BigInt
-	var sum *projecteuler.BigInt
-	if zero, err = projecteuler.MakeBigInt("0"); err != nil {
-		fmt.Println(err)
-		return
-	}
-	sum = &zero
+	zero := projecteuler.MakeZeroBigInt()
+	sum := &zero
 
 	for _, x := range numbers {
 		sum.AddTo(x)

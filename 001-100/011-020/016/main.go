@@ -19,14 +19,9 @@ func main() {
 }
 
 func calc(args ...interface{}) (result string, err error) {
-	var bi projecteuler.BigInt
-	if bi, err = projecteuler.MakeBigInt("1024"); err != nil {
-		return
-	}
-
-	biPtr := &bi
-	biPtr.PowBigInt(10)
-	biPtr.PowBigInt(10)
+	bi := projecteuler.MakeBigInt("1024")
+	bi.PowBigInt(10)
+	bi.PowBigInt(10)
 	sum := bi.DigitSum()
 
 	result = strconv.Itoa(sum)

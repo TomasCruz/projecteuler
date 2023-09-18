@@ -26,9 +26,7 @@ How many chains, with a starting number below one million, contain exactly sixty
 */
 
 func main() {
-	var limit int
-
-	projecteuler.Timed(calc, limit)
+	projecteuler.Timed(calc)
 }
 
 func calc(args ...interface{}) (result string, err error) {

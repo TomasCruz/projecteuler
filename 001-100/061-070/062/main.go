@@ -75,7 +75,7 @@ func calc(args ...interface{}) (result string, err error) {
 }
 
 func getMask(cube int64, weights []int) int {
-	bi, _ := projecteuler.MakeBigInt(strconv.FormatInt(cube, 10))
+	bi := projecteuler.MakeBigInt(strconv.FormatInt(cube, 10))
 	digits := []byte(bi.String())
 
 	mask := 0
