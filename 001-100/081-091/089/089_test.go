@@ -6,9 +6,9 @@ import (
 	"github.com/TomasCruz/projecteuler"
 )
 
-func TestProb079(t *testing.T) {
+func TestProb089(t *testing.T) {
 	if err := projecteuler.FuncForTesting(
-		"cGFzc3BocmFzZXdo8BwjToniHqfNo3FjsOPhs9gn7cn3Ys87",
+		"cGFzc3BocmFzZXdo8Bsh4+T+n1oZF7VmRr4AwtsJ/w==",
 		calc,
 	); err != nil {
 		t.Errorf(err.Error())
