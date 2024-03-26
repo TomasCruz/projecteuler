@@ -1,6 +1,8 @@
 package main
 
-import "math"
+import (
+	"math"
+)
 
 type minPathMatrix struct {
 	limit int
@@ -27,22 +29,44 @@ func (mm minPathMatrix) buildMinPathMatrix(r, c int) {
 	for i := r; i > 0; i-- {
 		mm.m[i-1][0] = mm.m[i][0] + mm.input[i-1][0]
 	}
-	for i := r + 1; i < mm.limit; i++ {
-		mm.m[i][0] = mm.m[i-1][0] + mm.input[i][0]
-	}
 
-	for i := 0; i < mm.limit; i++ {
-		for j := 1; j < mm.limit; j++ {
-			mm.m[i][j] = mm.m[i][j-1] + mm.input[i][j]
-		}
-	}
+	mm.buildDownRightMatrix()
 
 	for i := 0; i < mm.limit; i++ {
 		for j := 0; j < mm.limit; j++ {
-			// mm.updateCell(i, j, left)
-			mm.updateCell(i, j, down)
-			mm.updateCell(i, j, right)
-			mm.updateCell(i, j, up)
+			if mm.canGo(i, j, up) {
+				chechRes, newMin := mm.checkNewMin(i, j, up)
+				if chechRes {
+					mm.updateCell(i, j, up, newMin)
+				}
+			}
+		}
+	}
+}
+
+func (mm minPathMatrix) buildDownRightMatrix() {
+	for i := 0; i < mm.limit; i++ {
+		for j := 0; j < mm.limit; j++ {
+			fromLeft := int64(math.MaxInt64)
+			fromUp := int64(math.MaxInt64)
+
+			if mm.canGo(i, j, left) {
+				leftR, leftC := mm.goDirection(i, j, left)
+				fromLeft = mm.m[leftR][leftC] + mm.input[i][j]
+			}
+			if mm.canGo(i, j, up) {
+				upR, upC := mm.goDirection(i, j, up)
+				fromUp = mm.m[upR][upC] + mm.input[i][j]
+			}
+
+			minFrom := fromUp
+			if fromLeft < fromUp {
+				minFrom = fromLeft
+			}
+
+			if minFrom < mm.m[i][j] {
+				mm.m[i][j] = minFrom
+			}
 		}
 	}
 }
@@ -53,29 +77,26 @@ func (mm minPathMatrix) checkNewMin(r, c int, goingTo direction) (bool, int64) {
 	}
 
 	nr, nc := mm.goDirection(r, c, goingTo)
-	if mm.m[r][c] == math.MaxInt64 {
-		return false, 0
-	}
-
 	newMin := mm.m[r][c] + mm.input[nr][nc]
+
 	return newMin < mm.m[nr][nc], newMin
 }
 
-func (mm minPathMatrix) updateCell(r, c int, goingTo direction) {
-	chechRes, newMin := mm.checkNewMin(r, c, goingTo)
-	if !chechRes {
-		return
-	}
-
-	comingFrom := goingTo.opposite()
+func (mm minPathMatrix) updateCell(r, c int, goingTo direction, newMin int64) {
 	nr, nc := mm.goDirection(r, c, goingTo)
 
 	// update this cell
 	mm.m[nr][nc] = newMin
 
+	comingFrom := goingTo.opposite()
 	dirs := comingFrom.others()
 	for _, currDirection := range dirs {
-		mm.updateCell(nr, nc, currDirection)
+		if mm.canGo(nr, nc, currDirection) {
+			chechRes, newCurrMin := mm.checkNewMin(nr, nc, currDirection)
+			if chechRes {
+				mm.updateCell(nr, nc, currDirection, newCurrMin)
+			}
+		}
 	}
 }
 
