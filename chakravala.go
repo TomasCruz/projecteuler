@@ -19,7 +19,7 @@ func (c *ChakravalaTriplet) assign(rhs ChakravalaTriplet) {
 	c.K = rhs.K
 }
 
-func (c ChakravalaTriplet) string() string {
+func (c ChakravalaTriplet) String() string {
 	return fmt.Sprintf("[%s, %s, %d]", c.X.String(), c.Y.String(), c.K)
 }
 
@@ -51,10 +51,10 @@ func startingTriplet(n int) ChakravalaTriplet {
 
 func nextTriplet(n int, prev ChakravalaTriplet) ChakravalaTriplet {
 	m := calcM(n, prev)
-	return samasa(n, m, prev)
+	return Samasa(n, m, prev)
 }
 
-func samasa(n int, m *big.Int, prev ChakravalaTriplet) ChakravalaTriplet {
+func Samasa(n int, m *big.Int, prev ChakravalaTriplet) ChakravalaTriplet {
 	// samasa of prev (x, y, k) and (m, 1, m^2 - n) gives
 	// [math.Abs((xm + ny)/k), math.Abs((my + x)/k), (m^2 - n)/k] with application of Bhaskara's lemma
 	// my =(mod k) -x, minimizing m^2 - n
