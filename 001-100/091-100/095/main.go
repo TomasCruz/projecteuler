@@ -43,17 +43,17 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 	primes := projecteuler.Primes(limit, nil)
+	factorizations := calcFactorizations(limit, primes)
+
 	pd := properDivisors{
 		limit:  limit,
 		primes: primes,
 	}
-
-	pd.buildPrimePowers()
-	pd.buildPrimeDivisorSum()
+	pd.buildPrimePowerDivisorSums()
 
 	properDivisorsSum := make([]int, limit+1)
 	for i := 2; i <= limit; i++ {
-		p := divisorSum(i, primes, pd.primeDivisorSum) - i
+		p := divisorSum(i, pd.primePowerDivisorSums, factorizations) - i
 
 		if p > limit {
 			properDivisorsSum[i] = 0
@@ -76,15 +76,42 @@ func calc(args ...interface{}) (result string, err error) {
 	return
 }
 
-func divisorSum(x int, primes []int, primeDivisorSum map[int][]int64) int {
-	factors, err := projecteuler.Factorize(x, primes)
-	if err != nil {
-		return 0
+// modified sieve of Ἐρατοσθένης
+func calcFactorizations(limit int, primes []int) []map[int]int {
+	factorizations := make([]map[int]int, limit+1)
+	for i := 2; i <= limit; i++ {
+		factorizations[i] = map[int]int{}
 	}
+
+	x := make([]int, limit+1)
+	for i := 2; i <= limit; i++ {
+		x[i] = i
+	}
+
+	l := len(primes)
+	for i := 0; i < l; i++ {
+		currPrime := primes[i]
+		for currX := currPrime; currX <= limit; currX += currPrime {
+			var k int
+			for k = 0; x[currX]%currPrime == 0; k++ {
+				x[currX] /= currPrime
+			}
+
+			if k != 0 {
+				factorizations[currX][currPrime] = k
+			}
+		}
+	}
+
+	return factorizations
+}
+
+func divisorSum(x int, primePowerDivisorSums map[int][]int64, factorizations []map[int]int) int {
+	factors := factorizations[x]
 
 	p := int64(1)
 	for k, v := range factors {
-		p *= primeDivisorSum[k][v]
+		p *= primePowerDivisorSums[k][v]
 	}
 
 	return int(p)
@@ -97,7 +124,6 @@ func chainLength(i, limit int, properDivisorsSum []int) int {
 
 	for {
 		next = properDivisorsSum[prev]
-
 		if next == 0 || next > limit {
 			return 0
 		}
@@ -110,7 +136,6 @@ func chainLength(i, limit int, properDivisorsSum []int) int {
 		if next == i {
 			return len(chain)
 		}
-
 		prev = next
 	}
 
@@ -118,37 +143,31 @@ func chainLength(i, limit int, properDivisorsSum []int) int {
 }
 
 type properDivisors struct {
-	limit           int
-	primes          []int
-	primePowers     [][]int64
-	primeDivisorSum map[int][]int64
+	limit                 int
+	primes                []int
+	primePowers           [][]int64
+	primePowerDivisorSums map[int][]int64
 }
 
-func (pd *properDivisors) buildPrimePowers() {
+func (pd *properDivisors) buildPrimePowerDivisorSums() {
 	l := len(pd.primes)
 	pd.primePowers = make([][]int64, l)
+	pd.primePowerDivisorSums = make(map[int][]int64, l)
 
 	for i := 0; i < l; i++ {
 		pd.primePowers[i] = []int64{int64(1), int64(pd.primes[i])}
+		pd.primePowerDivisorSums[pd.primes[i]] = []int64{int64(0)}
 		for j := 2; ; j++ {
 			pd.primePowers[i] = append(pd.primePowers[i], pd.primePowers[i][j-1]*int64(pd.primes[i]))
 			if pd.primePowers[i][j] > int64(pd.limit) {
 				break
 			}
 		}
-	}
-}
 
-// https://mathworld.wolfram.com/DivisorFunction.html
-func (pd *properDivisors) buildPrimeDivisorSum() {
-	l := len(pd.primes)
-	pd.primeDivisorSum = make(map[int][]int64, l)
-
-	for i := 0; i < l; i++ {
-		pd.primeDivisorSum[pd.primes[i]] = []int64{int64(0)}
+		// https://mathworld.wolfram.com/DivisorFunction.html
 		for j := 1; j < len(pd.primePowers[i])-1; j++ {
 			divSum := (pd.primePowers[i][j+1] - int64(1)) / (pd.primePowers[i][1] - int64(1))
-			pd.primeDivisorSum[pd.primes[i]] = append(pd.primeDivisorSum[pd.primes[i]], divSum)
+			pd.primePowerDivisorSums[pd.primes[i]] = append(pd.primePowerDivisorSums[pd.primes[i]], divSum)
 		}
 	}
 }
