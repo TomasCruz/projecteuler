@@ -49,7 +49,6 @@ func calc(args ...interface{}) (result string, err error) {
 	// 632382^518061 > 519432^525806
 	// 518061 * ln(632382) > 525806 * ln(519432)
 	// 6919869 > 6919865, yup
-	// math.Log()
 
 	greatestIndex := 0
 	greatest := float64(1)
@@ -58,8 +57,7 @@ func calc(args ...interface{}) (result string, err error) {
 		str := strings.Split(textNumbers[i-1], ",")
 		base, _ := strconv.ParseFloat(str[0], 64)
 		exp, _ := strconv.ParseFloat(str[1], 64)
-		curr = math.Log(base) * exp
-		// curr.Exp(big.NewInt(base), big.NewInt(exp), nil)
+		curr = exp * math.Log(base)
 		if curr > greatest {
 			greatest = curr
 			greatestIndex = i
