@@ -32,7 +32,6 @@ func calc(args ...interface{}) (result string, err error) {
 			s = s[len(s)-10:]
 			degree = projecteuler.MakeBigInt(s)
 		}
-		// fmt.Println(degree.String())
 	}
 	res := degree.Int()
 	res *= 28433
