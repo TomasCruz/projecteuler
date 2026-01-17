@@ -80,3 +80,7 @@ func calc(args ...interface{}) (result string, err error) {
 	result = strconv.Itoa(sum)
 	return
 }
+
+func triangleContainsOrigin(a, b, c point) bool {
+	return triangleContainsPoint(a, b, c, point{})
+}

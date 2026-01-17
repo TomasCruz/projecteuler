@@ -8,11 +8,11 @@ func dotProduct(p1, p2 point) int {
 	return p1.x*p2.x + p1.y*p2.y
 }
 
-func triangleContainsOrigin(a, b, c point) bool {
+func triangleContainsPoint(a, b, c, p point) bool {
 	// using barycentric coordinates
 	v0 := point{x: c.x - a.x, y: c.y - a.y}
 	v1 := point{x: b.x - a.x, y: b.y - a.y}
-	v2 := point{x: -a.x, y: -a.y}
+	v2 := point{x: p.x - a.x, y: p.y - a.y}
 
 	d00 := dotProduct(v0, v0)
 	d01 := dotProduct(v0, v1)
