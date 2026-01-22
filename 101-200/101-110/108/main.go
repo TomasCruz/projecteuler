@@ -92,6 +92,9 @@ func calc(args ...interface{}) (result string, err error) {
 	y = nx / (x-n) = n*(x-n+n) / (x-n) = n*[1 + n / (x-n)]
 	so, divisibility of n^2/1, n^2/2, ... n^2/n
 
+	x-n in [1,...,n], so <= n
+	y-n = n^2 / (x-n), in [n^2/1, n^2/2, ... n^2/n], so >= n. For n, another is also n because 1/n = 1/2n + 1/2n
+
 1 2 3 4 5 6 7 8 9 10
  12 14 15 16 18 20 21 24 25 27
  28 30 35 36 40 42 45 48 49 50
