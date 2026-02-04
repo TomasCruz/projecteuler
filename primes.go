@@ -69,12 +69,14 @@ func NewBitset(n uint64) Bitset {
 	return make(Bitset, (n+63)/64)
 }
 
+// Get returns bool value on index
 func (b Bitset) Get(index uint64) bool {
 	pos := index / 64
 	j := index % 64
 	return (b[pos] & (uint64(1) << j)) != 0
 }
 
+// Set sets value on index
 func (b Bitset) Set(index uint64, value bool) {
 	pos := index / 64
 	j := index % 64
