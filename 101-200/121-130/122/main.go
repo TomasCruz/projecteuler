@@ -4,6 +4,7 @@ import (
 	"log"
 	"math"
 	"os"
+	"slices"
 	"strconv"
 
 	"github.com/TomasCruz/projecteuler"
@@ -45,7 +46,7 @@ func main() {
 
 		limit = int(limit64)
 	} else {
-		limit = 15
+		limit = 200
 	}
 
 	projecteuler.Timed(calc, limit)
@@ -160,7 +161,9 @@ func minSteps(d, r int, steps []powerSetSet, mSlice []int) int {
 		if _, present := mr[d]; present {
 			return 0
 		}
+	}
 
+	for _, mr := range pssR {
 		for _, md := range pssD {
 			l := len(mr)
 			for xd := range md {
@@ -190,10 +193,6 @@ func newPowerSet(limit, maxPower int, powersComputed map[int]struct{}) powerSet 
 	bs := projecteuler.NewBitset(uint64(limit + 1))
 
 	for k := range powersComputed {
-		if k > limit {
-			continue
-		}
-
 		bs.Set(uint64(k), true)
 	}
 
@@ -215,16 +214,12 @@ func addition(limit int, ps powerSet) []powerSet {
 	m := mapFromPowerSet(ps)
 
 	setCardinality := len(m)
-	sl := make([]int, setCardinality)
-	i := 0
-	max := -1
+	sl := make([]int, 0, setCardinality)
 	for k := range m {
-		sl[i] = k
-		if k > max {
-			max = k
-		}
-		i++
+		sl = append(sl, k)
 	}
+	slices.Sort(sl)
+	max := sl[setCardinality-1]
 
 	newX := map[int]struct{}{}
 	ret := []powerSet{}
@@ -236,7 +231,7 @@ func addition(limit int, ps powerSet) []powerSet {
 			}
 
 			if x > limit {
-				continue
+				break
 			}
 
 			if _, present := newX[x]; present {
