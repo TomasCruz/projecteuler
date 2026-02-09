@@ -258,15 +258,19 @@ func makeStep(limit, stepOrdinal int, steps []powerSetSet, ms map[int]int, missi
 		nextPowerSets := addition(limit, ps)
 
 		for _, currPS := range nextPowerSets {
+			currM := int(currPS[4])
+
+			currMOrdinal, present := ms[currM]
+			if present && currMOrdinal < stepOrdinal {
+				continue
+			}
+
 			steps[stepOrdinal][currPS] = struct{}{}
 
-			currM := int(currPS[4])
-			if _, present := ms[currM]; !present {
-				ms[currM] = stepOrdinal
-				delete(missingFirstHalf, currM)
-				if len(ms) == limit {
-					return
-				}
+			delete(missingFirstHalf, currM)
+			ms[currM] = stepOrdinal
+			if len(ms) == limit {
+				return
 			}
 		}
 	}
