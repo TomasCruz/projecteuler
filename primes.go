@@ -76,6 +76,30 @@ func (b Bitset) Get(index uint64) bool {
 	return (b[pos] & (uint64(1) << j)) != 0
 }
 
+// All returns set of values in Bitset
+func (b Bitset) All() map[int]struct{} {
+	m := map[int]struct{}{}
+
+	nPos := 0
+	for pos := 0; pos < len(b); pos++ {
+		if b[pos] == 0 {
+			continue
+		}
+
+		bit := uint64(1)
+		for j := 0; j < 64; j++ {
+			if b[pos]&bit != 0 {
+				m[nPos+j] = struct{}{}
+			}
+			bit <<= 1
+		}
+
+		nPos += 64
+	}
+
+	return m
+}
+
 // Set sets value on index
 func (b Bitset) Set(index uint64, value bool) {
 	pos := index / 64
