@@ -214,6 +214,6 @@ func calc(args ...interface{}) (result string, err error) {
 	no need to examine regulars
 
 	EXAMINE
-	top:				6i-1, 6i+1, 12i+5	x == t.max[ring-1]+1 == i^3 - (i-1)^3 + 1
-	ultimate:			12i-7, 6i-1, 6i+5	(i+1)^3 - i^3 []int len: 3, cap: 3, [53,29,35] 41, 23, 29
+	top:				6i-1, 6i+1, 12i+5	for x == i^3 - (i-1)^3 + 1
+	ultimate:			12i-7, 6i-1, 6i+5	for x == (i+1)^3 - i^3
 */
