@@ -1,0 +1,19 @@
+https://optimization-online.org/wp-content/uploads/2017/01/5839.pdf
+
+For Torricelli point T, CTA = ATB = BTC = 120 degrees
+from Law of cosines, aplied to triangle with edges p, q, b: b^2 = p^2 + q^2 - 2*p*q*cos CTA.
+Considering CTA = 120 degrees, cos CTA = -1/2, so b^2 = p^2 + q^2 + p*q
+
+a^2 = q^2 + r^2 + q*r
+b^2 = p^2 + q^2 + p*q
+c^2 = p^2 + r^2 + p*r
+
+p, q, b is an integer triangle with angle 120 degrees, b being opposite to 120 degrees angle.
+
+From
+https://en.wikipedia.org/wiki/Integer_triangle#Integer_triangles_with_a_120%C2%B0_angle
+
+for coprime integers m, n with 0 < n < m and m != n (mod 3), parametrization will generate all primitive triples uniquely
+b = m^2 + m*n + n^2
+q = 2*m*n + n^2
+r = m^2 - n^2
