@@ -4,7 +4,8 @@ import (
 	"fmt"
 )
 
-// Factorize returns prime factorization of num. Returns error if primes doesn't contain all prime factors of num
+// Factorize returns prime factorization of num, key of the map being prime factor.
+// Returns error if primes doesn't contain all prime factors of num
 func Factorize(num int, primes []int) (factors map[int]int, err error) {
 	factors = make(map[int]int)
 
@@ -28,6 +29,29 @@ func Factorize(num int, primes []int) (factors map[int]int, err error) {
 	}
 
 	return
+}
+
+// FactorizeIndex returns prime factorization of num, key of the map being index of the prime factor.
+// Returns error if primes doesn't contain all prime factors of num
+func FactorizeIndex(num int, primes []int) map[int]int {
+	factors := make(map[int]int)
+
+	for i := 0; i < len(primes); i++ {
+		if num%primes[i] == 0 {
+			exp := 0
+			for num%primes[i] == 0 {
+				num /= primes[i]
+				exp++
+			}
+			factors[i] = exp
+
+			if num == 1 {
+				break
+			}
+		}
+	}
+
+	return factors
 }
 
 // MultiplyFactors multiplies factors
