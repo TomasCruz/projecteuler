@@ -5,6 +5,10 @@ import (
 	"unsafe"
 )
 
+type Int32Plus interface {
+	~int | ~int32 | ~int64 | ~uint | ~uint32 | ~uint64
+}
+
 // PrimesDivisibility calculates and returns slice of primes smaller than limit, or until f returns true
 func PrimesDivisibility[T Int32Plus](limit T, f func(...any) bool, args ...any) (primes []T) {
 	primes = append(primes, 2)
@@ -33,10 +37,6 @@ func PrimesDivisibility[T Int32Plus](limit T, f func(...any) bool, args ...any) 
 	}
 
 	return
-}
-
-type Int32Plus interface {
-	~int | ~int32 | ~int64 | ~uint | ~uint32 | ~uint64
 }
 
 // PrimeSet calculates and returns slice of primes less than limit and puts them in primeSet
