@@ -119,9 +119,6 @@ func (b Bitset[T]) Set(index int, value bool) {
 	if value {
 		b.Slice[pos] |= T(1) << j
 	} else {
-		// m := uint64(math.MaxUint64)
-		// m -= uint64(1) << j
-		// b.Slice[pos] &= m
 		k := j + 1
 		m := ((T(1) << k) - 1) & b.Slice[pos]
 		b.Slice[pos] = ((b.Slice[pos] >> k) << k) + m
