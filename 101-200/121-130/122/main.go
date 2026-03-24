@@ -190,13 +190,13 @@ type powerSet [5]uint64
 type powerSetSet map[powerSet]struct{}
 
 func newPowerSet(limit, maxPower int, powersComputed map[int]struct{}) powerSet {
-	bs := projecteuler.NewBitset(uint64(limit + 1))
+	bs := projecteuler.NewBitset(uint64(limit+1), 64)
 
 	for k := range powersComputed {
-		bs.Set(uint64(k), true)
+		bs.Set(k, true)
 	}
 
-	sl := []uint64(bs)
+	sl := []uint64(bs.Slice)
 
 	ps := powerSet{}
 	copy(ps[:], sl)
@@ -206,7 +206,11 @@ func newPowerSet(limit, maxPower int, powersComputed map[int]struct{}) powerSet 
 }
 
 func mapFromPowerSet(ps powerSet) map[int]struct{} {
-	bs := projecteuler.Bitset(ps[:4])
+	bs := projecteuler.Bitset[uint64]{
+		Slice:   ps[:4],
+		Bitsize: 64,
+	}
+
 	return bs.All()
 }
 

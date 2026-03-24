@@ -2,16 +2,17 @@ package projecteuler
 
 import (
 	"math"
+	"unsafe"
 )
 
-// Primes calculates and returns slice of primes smaller than limit, or until f returns true
-func Primes(limit int, f func(...interface{}) bool, args ...interface{}) (primes []int) {
+// PrimesDivisibility calculates and returns slice of primes smaller than limit, or until f returns true
+func PrimesDivisibility[T Int32Plus](limit T, f func(...any) bool, args ...any) (primes []T) {
 	primes = append(primes, 2)
 	primes = append(primes, 3)
 
-	var i, num, numRootLimit int
-	for num = 5; num < limit; num += 2 {
-		numRootLimit = int(math.Sqrt(float64(num)))
+	var i int
+	for num := T(5); num < limit; num += 2 {
+		numRootLimit := T(math.Sqrt(float64(num)))
 
 		for i = 0; primes[i] <= numRootLimit; i++ {
 			if num%primes[i] == 0 {
@@ -34,11 +35,15 @@ func Primes(limit int, f func(...interface{}) bool, args ...interface{}) (primes
 	return
 }
 
+type Int32Plus interface {
+	~int | ~int32 | ~int64 | ~uint | ~uint32 | ~uint64
+}
+
 // PrimeSet calculates and returns slice of primes less than limit and puts them in primeSet
-func PrimeSet(limit int) (primes []int, primeSet map[int]struct{}) {
+func PrimeSet[T Int32Plus](limit T) (primes []T, primeSet map[T]struct{}) {
 	primes = Primes(limit, nil)
 
-	primeSet = make(map[int]struct{})
+	primeSet = make(map[T]struct{})
 	for _, x := range primes {
 		primeSet[x] = struct{}{}
 	}
@@ -47,13 +52,13 @@ func PrimeSet(limit int) (primes []int, primeSet map[int]struct{}) {
 }
 
 // IsPrime returns true iff x is prime
-func IsPrime(x int64) bool {
+func IsPrime[T Int32Plus](x T) bool {
 	if x%2 == 0 {
 		return false
 	}
 
-	root := int64(math.Sqrt(float64(x)))
-	for i := int64(3); i <= root; i += 2 {
+	root := T(math.Sqrt(float64(x)))
+	for i := T(3); i <= root; i += 2 {
 		if x%i == 0 {
 			return false
 		}
@@ -62,87 +67,97 @@ func IsPrime(x int64) bool {
 	return true
 }
 
-type Bitset []uint64
+type Bitset[T Int32Plus] struct {
+	Slice   []T
+	Bitsize int
+}
 
 // NewBitset construct new Bitset, all the bits set to 0 (false)
-func NewBitset(n uint64) Bitset {
-	return make(Bitset, (n+63)/64)
+func NewBitset[T Int32Plus](n T, bitsize int) Bitset[T] {
+	return Bitset[T]{
+		Slice:   make([]T, (int(n)+bitsize-1)/bitsize),
+		Bitsize: bitsize,
+	}
 }
 
 // Get returns bool value on index
-func (b Bitset) Get(index uint64) bool {
-	pos := index / 64
-	j := index % 64
-	return (b[pos] & (uint64(1) << j)) != 0
+func (b Bitset[T]) Get(index int) bool {
+	pos := index / b.Bitsize
+	j := index % b.Bitsize
+	return (b.Slice[pos] & (T(1) << j)) != 0
 }
 
 // All returns set of values in Bitset
-func (b Bitset) All() map[int]struct{} {
+func (b Bitset[T]) All() map[int]struct{} {
 	m := map[int]struct{}{}
 
 	nPos := 0
-	for pos := 0; pos < len(b); pos++ {
-		if b[pos] == 0 {
+	for pos := 0; pos < len(b.Slice); pos++ {
+		if b.Slice[pos] == 0 {
 			continue
 		}
 
-		bit := uint64(1)
-		for j := 0; j < 64; j++ {
-			if b[pos]&bit != 0 {
+		bit := T(1)
+		for j := 0; j < b.Bitsize; j++ {
+			if b.Slice[pos]&bit != 0 {
 				m[nPos+j] = struct{}{}
 			}
 			bit <<= 1
 		}
 
-		nPos += 64
+		nPos += b.Bitsize
 	}
 
 	return m
 }
 
 // Set sets value on index
-func (b Bitset) Set(index uint64, value bool) {
-	pos := index / 64
-	j := index % 64
+func (b Bitset[T]) Set(index int, value bool) {
+	pos := index / b.Bitsize
+	j := index % b.Bitsize
 
 	if value {
-		b[pos] |= uint64(1) << j
+		b.Slice[pos] |= T(1) << j
 	} else {
-		m := uint64(math.MaxUint64)
-		m -= uint64(1) << j
-		b[pos] &= m
+		// m := uint64(math.MaxUint64)
+		// m -= uint64(1) << j
+		// b.Slice[pos] &= m
+		k := j + 1
+		m := ((T(1) << k) - 1) & b.Slice[pos]
+		b.Slice[pos] = ((b.Slice[pos] >> k) << k) + m
 	}
 }
 
-// PrimesEratosthenes calculates and returns slice of primes smaller than limit, or until f returns true
-func PrimesEratosthenes(limit uint64, f func(...interface{}) bool, args ...interface{}) (primes []uint64) {
-	bs := NewBitset(limit + 1)
+// Primes uses Sieve of Eratosthenes to calculates and returns slice of primes smaller than limit, or until f returns true
+func Primes[T Int32Plus](limit T, f func(...any) bool, args ...any) (primes []T) {
+	bitsize := int(8 * unsafe.Sizeof(limit))
+	bs := NewBitset(limit+1, bitsize)
 
-	for i := uint64(2); i < limit; i++ {
+	for i := 2; i < int(limit); i++ {
 		if bs.Get(i) {
 			continue
 		}
 
-		for j := uint64(2 * i); j < limit; j += i {
+		for j := 2 * i; j < int(limit); j += i {
 			bs.Set(j, true)
 		}
 	}
 
-	var ret []uint64
-	if limit <= uint64(100000) {
-		ret = make([]uint64, 0, limit/2)
+	var ret []T
+	if limit <= T(100000) {
+		ret = make([]T, 0, limit/2)
 	} else {
-		ret = make([]uint64, 0, limit/10)
+		ret = make([]T, 0, limit/10)
 	}
 
-	ret = append(ret, uint64(2))
+	ret = append(ret, T(2))
 
-	for i := uint64(3); i <= limit; i += 2 {
+	for i := 3; i <= int(limit); i += 2 {
 		if bs.Get(i) {
 			continue
 		}
 
-		ret = append(ret, i)
+		ret = append(ret, T(i))
 		if f != nil {
 			args = append(args, ret)
 			if f(args...) {

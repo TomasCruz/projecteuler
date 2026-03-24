@@ -36,22 +36,22 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int64)
 
-	var largest int
-	inspected := int(limit)
-	projecteuler.Primes(inspected/2+1, isDivisibleToOne, &inspected, &largest)
+	var largest int64
+	inspected := int64(limit)
+	projecteuler.PrimesDivisibility(inspected/2+1, isDivisibleToOne, &inspected, &largest)
 
 	if largest == 0 {
-		largest = int(limit)
+		largest = int64(limit)
 	}
 
-	result = strconv.Itoa(largest)
+	result = strconv.FormatInt(largest, 10)
 	return
 }
 
 func isDivisibleToOne(args ...interface{}) bool {
-	inspected := args[0].(*int)
-	largest := args[1].(*int)
-	divider := args[2].(int)
+	inspected := args[0].(*int64)
+	largest := args[1].(*int64)
+	divider := args[2].(int64)
 
 	for *inspected%divider == 0 {
 		*largest = divider

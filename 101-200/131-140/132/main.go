@@ -38,7 +38,7 @@ func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	factors := map[int]int{0: 9, 2: 9}
-	primes := projecteuler.Primes(2e5, nil)
+	primes := projecteuler.Primes(int(2e5), nil)
 
 	multiplicativeOrderPrimes := make([][]map[int]int, len(primes))
 	for i := range primes {

@@ -39,7 +39,7 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := uint64(args[0].(int))
 
-	primes := projecteuler.PrimesEratosthenes(limit+100, nil)
+	primes := projecteuler.Primes(limit+100, nil)
 
 	sum := uint64(0)
 	power := uint64(10)

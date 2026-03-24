@@ -45,7 +45,7 @@ func calc(args ...interface{}) (result string, err error) {
 	power *= 1000
 
 	var i int
-	projecteuler.PrimesEratosthenes(pLimit, func(args ...any) bool {
+	projecteuler.Primes(pLimit, func(args ...any) bool {
 		power := args[0].(uint64)
 		iPtr := args[1].(*int)
 		primes := args[2].([]uint64)

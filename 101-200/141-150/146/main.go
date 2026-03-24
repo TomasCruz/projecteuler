@@ -37,7 +37,7 @@ func calc(args ...interface{}) (result string, err error) {
 	limit := uint64(args[0].(int))
 
 	setNs := []uint64{}
-	primes := projecteuler.PrimesEratosthenes(limit, nil)
+	primes := projecteuler.Primes(limit, nil)
 	primeSet := constructprimeSet(primes)
 	belowPrimeIndex := 8
 	mMaps := constructModuloMaps(belowPrimeIndex, primes)

@@ -37,24 +37,21 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
-	projecteuler.Primes(math.MaxInt64, isAskedIndex, limit)
+	var x int64
+	ordinal := 2
+	projecteuler.PrimesDivisibility(int64(math.MaxInt64), func(args ...any) bool {
+		limit := args[0].(int)
+		currPrime := args[1].(int64)
 
-	result = strconv.Itoa(x)
+		ordinal++
+		if ordinal == limit {
+			x = currPrime
+			return true
+		}
+
+		return false
+	}, limit)
+
+	result = strconv.FormatInt(x, 10)
 	return
-}
-
-var x int
-var ordinal = 2
-
-func isAskedIndex(args ...interface{}) bool {
-	limit := args[0].(int)
-	currPrime := args[1].(int)
-
-	ordinal++
-	if ordinal == limit {
-		x = currPrime
-		return true
-	}
-
-	return false
 }
