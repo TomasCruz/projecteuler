@@ -8,7 +8,7 @@ import (
 
 func TestProbSqrt13(t *testing.T) {
 	if err := projecteuler.FuncForTesting(
-		"",
+		"cGFzc3BocmFzZXdo8xoqQBYcTtyhS8ceu/Zz3KoZB6Y=",
 		calc,
 		13,
 		1000,
