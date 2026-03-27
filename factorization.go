@@ -2,6 +2,7 @@ package projecteuler
 
 import (
 	"fmt"
+	"slices"
 )
 
 // Factorize returns prime factorization of num, key of the map being prime factor.
@@ -124,4 +125,78 @@ func FindDivisors(factors map[int]int) (divisors []int) {
 	}
 
 	return
+}
+
+type factorization struct {
+	unfactored int
+	factors    map[int]int
+}
+
+// FactorizeAll returns prime factorization of all the integers less than limit, all the primes less than limit, and all the prime powers less than limit
+func FactorizeAll(limit int) ([]map[int]int, []int, [][]int64) {
+	factorizations := make([]factorization, limit)
+
+	for i := 2; i < limit; i++ {
+		factorizations[i] = factorization{
+			unfactored: i,
+			factors:    map[int]int{},
+		}
+	}
+
+	for num := 2; num < limit; num++ {
+		if factorizations[num].unfactored == 1 {
+			continue
+		}
+
+		for multiple := num; multiple < limit; multiple += num {
+			exp := 0
+			for factorizations[multiple].unfactored%num == 0 {
+				factorizations[multiple].unfactored /= num
+				exp++
+			}
+			factorizations[multiple].factors[num] = exp
+		}
+	}
+
+	factors := make([]map[int]int, limit)
+
+	var primes []int
+	var primePowers [][]int64
+	if limit <= 10000 {
+		l := limit / 2
+		primes = make([]int, 0, l)
+		primePowers = make([][]int64, 0, l)
+	} else {
+		l := limit / 10
+		primes = make([]int, 0, l)
+		primePowers = make([][]int64, 0, l)
+	}
+
+	for num := 2; num < limit; num++ {
+		factors[num] = make(map[int]int, len(factorizations[num].factors))
+
+		if len(factorizations[num].factors) == 1 {
+			for k, v := range factorizations[num].factors {
+				if v == 1 {
+					primes = append(primes, num)
+					primePowers = append(primePowers, []int64{})
+					l := len(primePowers) - 1
+					primePowers[l] = append(primePowers[l], 1)
+					primePowers[l] = append(primePowers[l], int64(num))
+					factors[num][l] = 1
+				} else {
+					kIndex, _ := slices.BinarySearch(primes, k)
+					primePowers[kIndex] = append(primePowers[kIndex], int64(num))
+					factors[num][kIndex] = v
+				}
+			}
+		} else {
+			for k, v := range factorizations[num].factors {
+				kIndex, _ := slices.BinarySearch(primes, k)
+				factors[num][kIndex] = v
+			}
+		}
+	}
+
+	return factors, primes, primePowers
 }

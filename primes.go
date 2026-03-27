@@ -141,7 +141,7 @@ func Primes[T Int32Plus](limit T, f func(...any) bool, args ...any) (primes []T)
 	}
 
 	var ret []T
-	if limit <= T(100000) {
+	if limit <= T(10000) {
 		ret = make([]T, 0, limit/2)
 	} else {
 		ret = make([]T, 0, limit/10)
@@ -165,4 +165,26 @@ func Primes[T Int32Plus](limit T, f func(...any) bool, args ...any) (primes []T)
 	}
 
 	return ret
+}
+
+// PrimePowers takes primes less than limit and returns prime powers less than limit, for powers less than powerLimit
+func PrimePowers[T Int32Plus](primes []T, limit, powerLimit int) [][]int64 {
+	primePowers := make([][]int64, len(primes))
+
+	for i, currPrime := range primes {
+		primePowers[i] = make([]int64, 0, powerLimit)
+		primePowers[i] = append(primePowers[i], 1)
+
+		for j := 1; j < powerLimit; j++ {
+			prev := primePowers[i][j-1]
+			next := prev * int64(currPrime)
+			if next > int64(limit) {
+				break
+			}
+
+			primePowers[i] = append(primePowers[i], next)
+		}
+	}
+
+	return primePowers
 }
