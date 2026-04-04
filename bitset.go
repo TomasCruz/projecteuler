@@ -57,7 +57,7 @@ func (b Bitset[T]) Set(index int, value bool) {
 		b.Slice[pos] |= T(1) << j
 	} else {
 		k := j + 1
-		m := ((T(1) << k) - 1) & b.Slice[pos]
+		m := ((T(1) << j) - 1) & b.Slice[pos]
 		b.Slice[pos] = ((b.Slice[pos] >> k) << k) + m
 	}
 }
