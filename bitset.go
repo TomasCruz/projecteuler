@@ -3,17 +3,17 @@ package projecteuler
 import "fmt"
 
 type Bitset[T Int32Plus] struct {
-	Slice        []T
-	Bitsize      int
-	ElementCount int
+	Slice           []T
+	Bitsize         int
+	MaxElementCount int
 }
 
 // NewBitset construct new Bitset, all the bits set to 0 (false)
 func NewBitset[T Int32Plus](n T, bitsize int) Bitset[T] {
 	return Bitset[T]{
-		Slice:        make([]T, (int(n)+bitsize-1)/bitsize),
-		Bitsize:      bitsize,
-		ElementCount: int(n),
+		Slice:           make([]T, (int(n)+bitsize-1)/bitsize),
+		Bitsize:         bitsize,
+		MaxElementCount: int(n),
 	}
 }
 
@@ -80,8 +80,8 @@ func (b Bitset[T]) Union(other Bitset[T]) (Bitset[T], error) {
 		return Bitset[T]{}, fmt.Errorf("bitsets have to have same bitsize")
 	}
 
-	bTCount := b.ElementCount / b.Bitsize
-	otherTCount := other.ElementCount / other.Bitsize
+	bTCount := b.MaxElementCount / b.Bitsize
+	otherTCount := other.MaxElementCount / other.Bitsize
 	if bTCount < otherTCount {
 		return other.Union(b)
 	}
@@ -96,8 +96,8 @@ func (b Bitset[T]) Union(other Bitset[T]) (Bitset[T], error) {
 	}
 
 	return Bitset[T]{
-		Slice:        sl,
-		Bitsize:      b.Bitsize,
-		ElementCount: b.ElementCount,
+		Slice:           sl,
+		Bitsize:         b.Bitsize,
+		MaxElementCount: b.MaxElementCount,
 	}, nil
 }
