@@ -200,3 +200,61 @@ func FactorizeAll(limit int) ([]map[int]int, []int, [][]int64) {
 
 	return factors, primes, primePowers
 }
+
+func FactorizedIndexGCD(numbers []map[int]int) map[int]int {
+	commonFactors := map[int]struct{}{}
+	for k := range numbers[0] {
+		commonFactors[k] = struct{}{}
+	}
+
+	for k := range numbers[0] {
+		for i := 1; i < len(numbers); i++ {
+			if _, present := numbers[i][k]; !present {
+				delete(commonFactors, k)
+				break
+			}
+		}
+
+		if len(commonFactors) == 0 {
+			break
+		}
+	}
+
+	ret := map[int]int{}
+	for k := range commonFactors {
+		currMin := numbers[0][k]
+		for i := 1; i < len(numbers); i++ {
+			currMin = min(currMin, numbers[i][k])
+			if currMin == 1 {
+				break
+			}
+		}
+
+		ret[k] = currMin
+	}
+
+	return ret
+}
+
+func FactorizedIndexLCM(numbers []map[int]int) map[int]int {
+	distinctFactors := map[int]struct{}{}
+	for i := range numbers {
+		for k := range numbers[i] {
+			distinctFactors[k] = struct{}{}
+		}
+	}
+
+	ret := map[int]int{}
+	for k := range distinctFactors {
+		currMax := 0
+		for i := range numbers {
+			if v, present := numbers[i][k]; present {
+				currMax = max(currMax, v)
+			}
+		}
+
+		ret[k] = currMax
+	}
+
+	return ret
+}

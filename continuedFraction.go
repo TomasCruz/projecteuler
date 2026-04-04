@@ -173,7 +173,7 @@ func gcd(a, b, c int, primes []int) int {
 			continue
 		}
 
-		resMap[p] = min(e, eb, ec)
+		resMap[p] = minABC(e, eb, ec)
 	}
 
 	res := 1
@@ -186,7 +186,7 @@ func gcd(a, b, c int, primes []int) int {
 	return res
 }
 
-func min(a, b, c int) int {
+func minABC(a, b, c int) int {
 	m := a
 	if b < m {
 		m = b
