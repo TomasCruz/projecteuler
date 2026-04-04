@@ -67,70 +67,13 @@ func IsPrime[T Int32Plus](x T) bool {
 	return true
 }
 
-type Bitset[T Int32Plus] struct {
-	Slice   []T
-	Bitsize int
-}
-
-// NewBitset construct new Bitset, all the bits set to 0 (false)
-func NewBitset[T Int32Plus](n T, bitsize int) Bitset[T] {
-	return Bitset[T]{
-		Slice:   make([]T, (int(n)+bitsize-1)/bitsize),
-		Bitsize: bitsize,
-	}
-}
-
-// Get returns bool value on index
-func (b Bitset[T]) Get(index int) bool {
-	pos := index / b.Bitsize
-	j := index % b.Bitsize
-	return (b.Slice[pos] & (T(1) << j)) != 0
-}
-
-// All returns set of values in Bitset
-func (b Bitset[T]) All() map[int]struct{} {
-	m := map[int]struct{}{}
-
-	nPos := 0
-	for pos := 0; pos < len(b.Slice); pos++ {
-		if b.Slice[pos] == 0 {
-			continue
-		}
-
-		bit := T(1)
-		for j := 0; j < b.Bitsize; j++ {
-			if b.Slice[pos]&bit != 0 {
-				m[nPos+j] = struct{}{}
-			}
-			bit <<= 1
-		}
-
-		nPos += b.Bitsize
-	}
-
-	return m
-}
-
-// Set sets value on index
-func (b Bitset[T]) Set(index int, value bool) {
-	pos := index / b.Bitsize
-	j := index % b.Bitsize
-
-	if value {
-		b.Slice[pos] |= T(1) << j
-	} else {
-		k := j + 1
-		m := ((T(1) << k) - 1) & b.Slice[pos]
-		b.Slice[pos] = ((b.Slice[pos] >> k) << k) + m
-	}
-}
-
 // Primes uses Sieve of Eratosthenes to calculates and returns slice of primes smaller than limit, or until f returns true
 func Primes[T Int32Plus](limit T, f func(...any) bool, args ...any) (primes []T) {
 	bitsize := int(8 * unsafe.Sizeof(limit))
 	bs := NewBitset(limit+1, bitsize)
 
-	for i := 2; i < int(limit); i++ {
+	limitRoot := int(math.Sqrt(float64(limit)))
+	for i := 2; i <= limitRoot; i++ {
 		if bs.Get(i) {
 			continue
 		}
