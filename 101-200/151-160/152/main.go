@@ -46,11 +46,6 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
-	numbers := make([]float64, limit+1)
-	for i := 2; i <= limit; i++ {
-		numbers[i] = 1.0 / (float64(i) * float64(i))
-	}
-
 	primesAll := projecteuler.Primes(limit/2, nil)
 	primes := calcRelevantPrimes(limit, primesAll)
 
@@ -58,6 +53,16 @@ func calc(args ...interface{}) (result string, err error) {
 	l := map[int]int{}
 	for i := range primes {
 		l[primes[i]] = int(math.Floor(math.Log(float64(limit)) / math.Log(float64(primes[i]))))
+	}
+
+	bigNumber := projecteuler.MultiplyFactors(l)
+	bigNumber *= bigNumber
+
+	target := bigNumber / 2
+
+	numbers := make([]int64, limit+1)
+	for i := 2; i <= limit; i++ {
+		numbers[i] = bigNumber / int64(i*i)
 	}
 
 	divisors := projecteuler.FindDivisors(l)
@@ -70,12 +75,12 @@ func calc(args ...interface{}) (result string, err error) {
 	divisors = divisors[1:i] // cut off 1 and divisors greater than limit
 
 	upperStartIndex, _ := slices.BinarySearch(divisors, limit/2)
-	upperStartIndex -= 1
+	upperStartIndex -= 3 // fastest execution
 
 	upperDivisors := divisors[upperStartIndex:]
 	upperSums := calcUpperSums(upperDivisors, numbers)
 
-	combos := findCombos(divisors, numbers, upperStartIndex, upperSums)
+	combos := findCombos(divisors, numbers, target, upperStartIndex, upperSums)
 
 	result = strconv.Itoa(len(combos))
 	return
@@ -115,38 +120,38 @@ func calcRelevantPrimesRec(p, pSq, pLimit, index, currNom, currDenom int) bool {
 }
 
 type bsf struct {
-	f  float64
+	x  int64
 	bs projecteuler.Bitset[int]
 }
 
-func cmpFloats(a, b float64) int {
+func cmpInts(a, b int64) int {
 	switch {
-	case math.Abs(a-b) < 1e-15:
-		return 0
+	case a > b:
+		return 1
 	case a < b:
 		return -1
 	default:
-		return 1
+		return 0
 	}
 }
 
-func calcUpperSums(upperDivisors []int, numbers []float64) []bsf {
+func calcUpperSums(upperDivisors []int, numbers []int64) []bsf {
 	pow2 := 1
 	for range len(upperDivisors) {
 		pow2 *= 2
 	}
 	ret := make([]bsf, 0, pow2)
-	ret = calcUpperSumsRec(upperDivisors, numbers, 0, 0.0, projecteuler.NewBitset(len(upperDivisors), 64), ret)
+	ret = calcUpperSumsRec(upperDivisors, numbers, 0, 0, projecteuler.NewBitset(len(upperDivisors), 64), ret)
 	slices.SortFunc(ret, func(a, b bsf) int {
-		return cmpFloats(a.f, b.f)
+		return cmpInts(a.x, b.x)
 	})
 
 	return ret
 }
 
-func calcUpperSumsRec(upperDivisors []int, numbers []float64, index int, currSum float64, currBS projecteuler.Bitset[int], ret []bsf) []bsf {
+func calcUpperSumsRec(upperDivisors []int, numbers []int64, index int, currSum int64, currBS projecteuler.Bitset[int], ret []bsf) []bsf {
 	if index == len(upperDivisors) {
-		ret = append(ret, bsf{f: currSum, bs: currBS.Clone()})
+		ret = append(ret, bsf{x: currSum, bs: currBS.Clone()})
 		return ret
 	}
 
@@ -158,36 +163,38 @@ func calcUpperSumsRec(upperDivisors []int, numbers []float64, index int, currSum
 	return ret
 }
 
-func findCombos(divisors []int, numbers []float64, upperStartIndex int, upperSums []bsf) [][]int {
+func findCombos(divisors []int, numbers []int64, target int64, upperStartIndex int, upperSums []bsf) [][]int {
 	ret := [][]int{}
-	ret = findCombosRec(divisors, numbers, upperSums, 1, upperStartIndex, 0.25, []int{2}, ret)
+	ret = findCombosRec(divisors, numbers, upperSums, target, 1, upperStartIndex, numbers[2], []int{2}, ret)
 
 	return ret
 }
 
-func findCombosRec(divisors []int, numbers []float64, upperSums []bsf, index, upperStartIndex int, currSum float64, currCombo []int, ret [][]int) [][]int {
+func findCombosRec(divisors []int, numbers []int64, upperSums []bsf, target int64,
+	index, upperStartIndex int, currSum int64, currCombo []int, ret [][]int) [][]int {
+
 	if index == upperStartIndex {
-		bsfIndex, found := slices.BinarySearchFunc(upperSums, 0.5-currSum, func(a bsf, x float64) int {
-			return cmpFloats(a.f, x)
+		x := target - currSum
+		bsfIndex, found := slices.BinarySearchFunc(upperSums, x, func(a bsf, x int64) int {
+			return cmpInts(a.x, x)
 		})
 
 		if found {
-			rest := upperSums[bsfIndex].bs.All()
-			rSl := make([]int, 0, len(rest))
-			for k := range rest {
-				rSl = append(rSl, k)
+			indexStart := bsfIndex
+			for indexStart > 0 && upperSums[indexStart-1].x == x {
+				indexStart--
 			}
-			slices.Sort(rSl)
 
-			cc := make([]int, len(currCombo)+len(rest))
-			i := 0
-			for ; i < len(currCombo); i++ {
-				cc[i] = currCombo[i]
+			indexEnd := bsfIndex
+			for indexEnd < len(upperSums)-1 && upperSums[indexEnd+1].x == x {
+				indexEnd++
 			}
-			for j := range rSl {
-				cc[i+j] = divisors[rSl[j]+upperStartIndex]
+
+			for i := indexStart; i <= indexEnd; i++ {
+				cc := extractSolution(upperSums, i, currCombo, divisors, upperStartIndex)
+				ret = append(ret, cc)
 			}
-			ret = append(ret, cc)
+			// fmt.Println(cc)
 		}
 
 		return ret
@@ -195,15 +202,33 @@ func findCombosRec(divisors []int, numbers []float64, upperSums []bsf, index, up
 
 	nextSum := currSum + numbers[divisors[index]]
 
-	if nextSum < 0.5 {
+	if nextSum <= target {
 		currCombo = append(currCombo, divisors[index])
-		ret = findCombosRec(divisors, numbers, upperSums, index+1, upperStartIndex, nextSum, currCombo, ret)
+		ret = findCombosRec(divisors, numbers, upperSums, target, index+1, upperStartIndex, nextSum, currCombo, ret)
 		currCombo = currCombo[:len(currCombo)-1]
 	}
-
-	ret = findCombosRec(divisors, numbers, upperSums, index+1, upperStartIndex, currSum, currCombo, ret)
+	ret = findCombosRec(divisors, numbers, upperSums, target, index+1, upperStartIndex, currSum, currCombo, ret)
 
 	return ret
+}
+
+func extractSolution(upperSums []bsf, index int, currCombo []int, divisors []int, upperStartIndex int) []int {
+	rest := upperSums[index].bs.All()
+	rSl := make([]int, 0, len(rest))
+	for k := range rest {
+		rSl = append(rSl, k)
+	}
+	slices.Sort(rSl)
+
+	cc := make([]int, len(currCombo)+len(rest))
+	i := 0
+	for ; i < len(currCombo); i++ {
+		cc[i] = currCombo[i]
+	}
+	for j := range rSl {
+		cc[i+j] = divisors[rSl[j]+upperStartIndex]
+	}
+	return cc
 }
 
 // might be useful in the future
@@ -278,5 +303,5 @@ func calcTrigamma(numbers []float64) []float64 {
 
 	Examine for product of relevant prime factors (and powers) within above limits which subset of divisors sums to 1/2.
 
-	P.S. should be reworked to deal with fractions (big.Rat) instead of float64
+	P.S. reworked to deal with int64
 */
