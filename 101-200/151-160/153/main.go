@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -78,56 +79,111 @@ func main() {
 func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
-	result = strconv.Itoa(limit)
+	coprimeSum := findCoprimeSum(limit)
+	equalSum := findEqualSum(limit)
+	realSum := findRealSum(limit)
+	sum := coprimeSum + equalSum + realSum
+
+	result = strconv.FormatInt(sum, 10)
 	return
 }
 
-func findK(p int64) int64 {
-	for n := int64(2); n < p; n++ {
-		// n^(p-1)/2 mod p == -1
-		pow := n % p
-		exp := (p - 1) / 2
-		for i := 1; i < int(exp); i++ {
-			pow *= n
-			pow %= p
+type pair struct {
+	a, b, norm, sum int
+}
+
+func newPair(a, b int) pair {
+	return pair{
+		a:    a,
+		b:    b,
+		norm: a*a + b*b,
+		sum:  a + b,
+	}
+}
+
+func (p pair) String() string {
+	return fmt.Sprintf("(%d, %d)\t%d, %d", p.a, p.b, p.norm, p.sum)
+}
+
+func findCoprimeSum(n int) int64 {
+	ret := int64(0)
+
+	for b := 2; b < n; b++ {
+		bs := projecteuler.NewBitset(b+1, 64)
+		for a := 2; a <= b/2; a++ {
+			if b%a == 0 {
+				for i := 1; ; i++ {
+					mul := a * i
+					if mul > b {
+						break
+					}
+
+					bs.Set(mul, true)
+				}
+			}
 		}
 
-		if pow == -1 {
-			return exp / 2
+		for a := 1; a < b; a++ {
+			if !bs.Get(a) {
+				p := newPair(a, b)
+				if p.norm > n {
+					break
+				}
+
+				sum := int64(0)
+				for k := 1; ; k++ {
+					if k*p.norm > n {
+						break
+					}
+					sum += (int64(n) / (int64(k) * int64(p.norm))) * 2 * int64(k) * int64(p.sum)
+				}
+
+				ret += sum
+			}
 		}
 	}
 
-	return 0
+	return ret
 }
 
-// extended Euclidean algorithm
-func extendedEuclidean(a, n int) int {
-	return 0
+func findEqualSum(n int) int64 {
+	ret := int64(0)
+
+	for k := 1; ; k++ {
+		if 2*k > n {
+			break
+		}
+		ret += (int64(n) / (int64(k) * 2)) * 2 * int64(k)
+	}
+
+	return ret
+}
+
+func findRealSum(n int) int64 {
+	ret := int64(0)
+
+	for i := 1; i <= n; i++ {
+		ret += (int64(n) / int64(i)) * int64(i)
+	}
+
+	return ret
 }
 
 /*
-	a,c > 0, sign b and sign d must be different, otherwise ad + bc != 0
-	n / (a + bi) = c + di => n = (a + bi) * (c + di) = (ac - bd) + i*(ad + bc)
-	n / (a - bi) = c - di => n = (a - bi) * (c - di) = (ac - bd) - i*(ad + bc)
-	n / (a + bi) = c + di => n / (a - bi) = c - di
+	Wanted sum of sum of divisors is sum of sum of complex Gaussian integers divisors plus sum of sum of real divisors,
+	which is sum of P[1..r](pi^a[i+1]-1)/(pi-1)) == sum[1..n](i*floor(n/i))
 
-	ad + bc = 0, ac - bd = n
+	https://math.stackexchange.com/questions/1504639/how-to-simplify-a-sum-of-complex-divisors
 
-	e.g. 4/(1-i) = 2+2i, a = 1, c = 2, b = -1, d = 2
+	n = (a+bi)*(c+di) = (ac-bd) + (bc+ad)i
+	norm of divisor has to divide n
 
-	Since sign b and sign d must be different, -bd is positive => both ac and -bd are positive => all of a,b,c,d <= n
-	For complex Gaussian integers, a,b,c,d < n because bd != 0
-	For real Gaussian integers, (b, d = 0), a and c are divisors of n.
+	Every true complex divisor with a positive real part can be expressed as k*(a+bi), gcd(a,b)=1 and a,b,k positive. Let norm be c = a^2 + b^2.
+	For a != b:
+		For every k, there is floor(n/kc) multiples of k*(a+bi), k*(a-bi), k*(b-ai) and k*(b+ai), a+bi multiplied by an identity.
+		Sum of real parts of these is 2*k*(a+b). It is therefore enough to consider only a < b.
+	For a = b:
+		a=b=1, c=2. Sum is not 4k but 2k, because 1+i multiplied by an identity is 1+i,-1-i(out),-1+i(out) and 1-i so sum is sum[1..n/2](floor(n/2k)*2k)
 
-	Wanted sum of divisors is sum of real divisors P[1..r](pi^a[i+1]-1)/(pi-1)) plus sum of complex Gaussian integers divisors.
-
-	Without loss of generality, b is positive and d is negative. For all symbols below representing positive integers,
-	n / (a+bi) = c-di; bc - ad = 0, ac + bd = n
-		=> bc = ad, acd + bd^2 = nd, bc^2 + bd^2 = nd, b*(c^2 + d^2) = nd
-	Same way a*(c^2 + d^2) = nc, c*(a^2 + b^2) = na, d*(a^2 + b^2) = nb
-
-	https://stackoverflow.com/questions/2269810/whats-a-nice-method-to-factor-gaussian-integers
-	https://en.wikipedia.org/wiki/Euclidean_algorithm#Gaussian_integers
-	https://mathworld.wolfram.com/DivisorFunction.html (end section, related to Gaussian integers)
-	https://en.wikipedia.org/wiki/Modular_multiplicative_inverse#Extended_Euclidean_algorithm
+	Overall sum is sum[a,b | c <= n && gcd(a,b)=1 && a < b](sum[1..n](floor(n/kc) * 2*k*(a+b)) + sum[1..n/2](floor(n/2k)*2k) + sum[1..n](i*floor(n/i))
 */
