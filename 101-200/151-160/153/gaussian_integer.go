@@ -30,7 +30,9 @@ func (g gaussianInteger) mul(other gaussianInteger) gaussianInteger {
 }
 
 func (g gaussianInteger) div(other gaussianInteger) (gaussianInteger, gaussianInteger) {
-	// z1/z2 = (ac+bd)/norm(other)+i*(bc-ad)/norm(other)
+	// z1/z2 = (a+bi)/(c+di) = (a+bi)*(c-di)/(c+di)*(c-di)
+	//		= (ac+bd + i*(bc-ad))/(cc+dd)
+	//		= (ac+bd)/norm(other)+i*(bc-ad)/norm(other)
 	rTimesNormOther := g.x[0][0]*other.x[0][0] + g.x[1][0]*other.x[1][0]
 	iTimesNormOther := g.x[1][0]*other.x[0][0] - g.x[0][0]*other.x[1][0]
 
