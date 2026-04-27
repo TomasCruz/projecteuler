@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"os"
 	"strconv"
 
@@ -108,10 +109,11 @@ func (p pair) String() string {
 func findCoprimeSum(n int) int64 {
 	ret := int64(0)
 
-	for b := 2; b < n; b++ {
+	root := int(math.Sqrt(float64(n)))
+	for b := 2; b < root; b++ {
 		bs := projecteuler.NewBitset(b+1, 64)
 		for a := 2; a <= b/2; a++ {
-			if b%a == 0 {
+			if b%a == 0 && !bs.Get(a) {
 				for i := 1; ; i++ {
 					mul := a * i
 					if mul > b {
