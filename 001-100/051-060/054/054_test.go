@@ -12,6 +12,6 @@ func TestProb054(t *testing.T) {
 		calc,
 		"p054_poker.txt",
 	); err != nil {
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 }

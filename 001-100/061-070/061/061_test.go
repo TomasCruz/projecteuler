@@ -14,6 +14,6 @@ func TestProb061(t *testing.T) {
 		projecteuler.ConcurrentKind,
 	); err != nil {
 
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 }

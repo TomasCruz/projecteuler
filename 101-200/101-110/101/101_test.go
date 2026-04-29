@@ -11,6 +11,6 @@ func TestProb101(t *testing.T) {
 		"cGFzc3BocmFzZXdo9BgiT43rFqP1Q9e3OuRI5qvZyY8x0RVBUJQu",
 		calc,
 	); err != nil {
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 }

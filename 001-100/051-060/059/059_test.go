@@ -12,6 +12,6 @@ func TestProb059(t *testing.T) {
 		calc,
 		"p059_cipher.txt",
 	); err != nil {
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 }

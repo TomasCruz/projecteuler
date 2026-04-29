@@ -14,6 +14,6 @@ func TestProb024(t *testing.T) {
 		1000000,
 	); err != nil {
 
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 }

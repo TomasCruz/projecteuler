@@ -12,6 +12,6 @@ func TestProb096(t *testing.T) {
 		calc,
 		"p096_sudoku.txt",
 	); err != nil {
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 }

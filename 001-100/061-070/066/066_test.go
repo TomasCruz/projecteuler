@@ -14,6 +14,6 @@ func TestProb066(t *testing.T) {
 		chakravalaSolver{},
 	); err != nil {
 
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 }

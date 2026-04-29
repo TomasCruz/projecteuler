@@ -1,6 +1,6 @@
 module github.com/TomasCruz/projecteuler
 
-go 1.22
+go 1.26
 
 require gonum.org/v1/gonum v0.15.0
 

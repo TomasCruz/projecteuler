@@ -12,6 +12,6 @@ func TestProb119(t *testing.T) {
 		calc,
 		30,
 	); err != nil {
-		t.Errorf(err.Error())
+		t.Error(err.Error())
 	}
 }
