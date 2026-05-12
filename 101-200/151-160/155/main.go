@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -67,8 +66,6 @@ func calc(args ...interface{}) (result string, err error) {
 				}
 			}
 		}
-
-		fmt.Printf("%d -> %d\n", i, len(levels[i]))
 	}
 
 	overall := map[projecteuler.Fraction]struct{}{}

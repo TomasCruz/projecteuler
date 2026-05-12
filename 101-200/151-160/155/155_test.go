@@ -8,7 +8,7 @@ import (
 
 func TestProb155(t *testing.T) {
 	if err := projecteuler.FuncForTesting(
-		"",
+		"cGFzc3BocmFzZXdo9BcnT4/uEP+wpiiCHnYSXl5EkLo1ulM=",
 		calc,
 		18,
 	); err != nil {
