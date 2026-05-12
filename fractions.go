@@ -39,8 +39,19 @@ func (f Fraction) String() string {
 }
 
 // f.num == n1*k, f.denom == d1*k, where k == GCD(num,denom). After reducing, f.num == n1 and f.denom == d1
-func (f *Fraction) Reduce() {
+func (f *Fraction) Reduce() Fraction {
 	k := GCD(f.Num, f.Denom)
 	f.Num /= k
 	f.Denom /= k
+	return *f
+}
+
+func ReciprocalFraction(f Fraction) Fraction {
+	return NewFraction(f.Denom, f.Num)
+}
+
+func AddFractions(lhs, rhs Fraction) Fraction {
+	f := NewFraction(lhs.Num*rhs.Denom+rhs.Num*lhs.Denom, rhs.Denom*lhs.Denom)
+	f.Reduce()
+	return f
 }
