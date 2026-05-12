@@ -78,3 +78,16 @@ func calc(args ...interface{}) (result string, err error) {
 	result = strconv.Itoa(len(overall))
 	return
 }
+
+/*
+Comment by user pghj:
+Calculate D(n) by making all combinations of previously calculated D(1) & D(n-1), D(2) & D(n-2), ...
+
+Because I store the results in a SortedSet, each value is inserted only once.
+Useful optimization: After each completion of D(n), I immidiately remove all members in D(n) already present in D(m) for m<n.
+This reduces memory requirements and increases speed by +/- 50%. This can safely be done because if say D(1) contains "60",
+there is no need for D(5) to contain it as well. When calculating D(12) by combining elements from D(5) and D(7), the "60" element in D(1)
+has already been combined with D(7) when calculation D(8) and the result is stored there.
+
+Note that I never normalize my rational numbers since this is not required for comparison.
+*/
