@@ -48,7 +48,7 @@ func calc(args ...interface{}) (result string, err error) {
 	limit := args[0].(int)
 
 	levels := make([]map[projecteuler.Fraction]struct{}, limit+1)
-	levels[1] = map[projecteuler.Fraction]struct{}{projecteuler.NewFraction(60, 1): {}}
+	levels[1] = map[projecteuler.Fraction]struct{}{projecteuler.NewFraction(1, 1): {}}
 
 	for i := 2; i <= limit; i++ {
 		levels[i] = map[projecteuler.Fraction]struct{}{}
